@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>An Application in One Paragraph — James Vickers</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23003d4c'/%3E%3Ctext x='32' y='46' font-family='Georgia,serif' font-size='42' fill='%23eef3f4' text-anchor='middle'%3E%C2%B6%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=Mulish:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -573,6 +574,115 @@
         .dock-img { height: 135px; }
     }
 
+    /* ---------- Wizard overlay ---------- */
+    .wiz-scrim {
+        position: fixed;
+        inset: 0;
+        z-index: 100;
+        background: rgba(0, 30, 38, 0.55);
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+    }
+    .wiz-scrim.open { display: flex; animation: wizfade 0.35s ease; }
+    @keyframes wizfade { from { opacity: 0; } to { opacity: 1; } }
+    .wiz {
+        background: var(--card);
+        border-radius: 18px;
+        max-width: 460px;
+        width: 100%;
+        padding: 34px 34px 28px;
+        box-shadow: 0 24px 80px rgba(0, 30, 38, 0.35);
+        animation: wizpop 0.45s cubic-bezier(0.22, 1.2, 0.36, 1);
+        text-align: left;
+    }
+    @keyframes wizpop { from { opacity: 0; transform: translateY(22px) scale(0.97); } to { opacity: 1; transform: none; } }
+    .wiz-step-label {
+        font-family: var(--sans);
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--teal);
+        margin-bottom: 10px;
+    }
+    .wiz h3 {
+        font-family: var(--serif);
+        font-size: 26px;
+        font-weight: 700;
+        margin-bottom: 12px;
+        line-height: 1.2;
+    }
+    .wiz p {
+        font-size: 15.5px;
+        line-height: 1.7;
+        color: var(--ink);
+        margin-bottom: 22px;
+    }
+    .wiz .wiz-demo {
+        font-family: var(--serif);
+        font-size: 17px;
+        background: var(--paper);
+        border: 1px solid var(--rule);
+        border-radius: 10px;
+        padding: 14px 18px;
+        margin-bottom: 22px;
+    }
+    .wiz .wiz-demo .fakehl {
+        background-image: linear-gradient(var(--teal-soft), var(--teal-soft)), linear-gradient(var(--teal), var(--teal));
+        background-repeat: no-repeat;
+        background-size: 100% 42%, 100% 2px;
+        background-position: 0 68%, 0 100%;
+        padding: 0 1px 2px;
+    }
+    .wiz-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    .wiz-dots { display: flex; gap: 6px; }
+    .wiz-dots span {
+        width: 7px; height: 7px;
+        border-radius: 50%;
+        background: var(--rule);
+        transition: background 0.2s ease;
+    }
+    .wiz-dots span.on { background: var(--teal); }
+    .wiz-row .spacer { flex: 1; }
+    .wiz-skip {
+        font-family: var(--sans);
+        font-size: 12.5px;
+        font-weight: 600;
+        color: var(--ink-soft);
+        background: none;
+        border: none;
+        cursor: pointer;
+        text-decoration: underline;
+        text-underline-offset: 3px;
+    }
+    .wiz-next {
+        font-family: var(--sans);
+        font-size: 13px;
+        font-weight: 700;
+        padding: 10px 22px;
+        border-radius: 999px;
+        border: none;
+        background: var(--teal);
+        color: #fff;
+        cursor: pointer;
+        transition: background 0.18s ease, transform 0.18s ease;
+    }
+    .wiz-next:hover { background: var(--teal-deep); transform: translateY(-1px); }
+    .btn.help {
+        width: 30px;
+        padding: 6px 0;
+        text-align: center;
+        font-weight: 800;
+    }
+
     /* ---------- Reduced motion ---------- */
     @media (prefers-reduced-motion: reduce) {
         *, *::before, *::after { animation: none !important; transition: none !important; }
@@ -600,6 +710,7 @@
         <span class="chip">Brief: 250–350 · <b>within limit</b></span>
         <span class="chip live" id="liveChip" title="Live conditions over Woodstock. The estate already talks, if you listen."><span class="pulse"></span><span id="liveText"></span></span>
         <span class="spacer"></span>
+        <button class="btn help" id="wizOpen" title="How this page works">?</button>
         <button class="btn" id="plainToggle">Read as submitted</button>
         <button class="btn primary" id="copyBtn">Copy plain text</button>
     </div>
@@ -608,7 +719,7 @@
 <div class="frame">
     <div class="stage">
         <div class="para-wrap">
-            <p class="instruction reveal">The brief asks for one innovation goal in 250 to 350 words, and this is that paragraph. The underlined phrases open out, each landing the goal in a different strand of Blenheim. Ask the page a question, take the tour, or press Read as submitted for the plain text.</p>
+            <p class="instruction reveal">The brief asks for one innovation goal in 250 to 350 words, and this is it. Tap any underlined phrase to open the strand of Blenheim it lands in, ask the page a question, take the tour, or press Read as submitted for the plain text.</p>
 
             <div class="askbox reveal">
                 <div class="field">
@@ -623,7 +734,7 @@
                 <div class="aa-tag" id="aaTag"></div>
             </div>
 
-            <p class="para reveal" id="para">Blenheim has already built the hard parts, a <button class="hl" data-k="twin">digital twin of the Palace</button>, <button class="hl" data-k="vms">visitor forecasting</button> that improved accuracy by around 80%, open-source sensors that <button class="hl" data-k="base">listen to birds, bats and even the soil</button>, a guide that <button class="hl" data-k="culturati">adapts its storytelling to each visitor</button>, and a workforce where <button class="hl" data-k="adoption">42% of staff</button> use AI in their daily work. My goal for the next phase is to connect them. <button class="hl" data-k="goal">One conversational layer</button> over the whole estate, so anyone who works here can ask a question in plain English and get an answer drawn from Blenheim's own data. A <button class="hl" data-k="ops">duty manager</button> asks what Saturday looks like and gets a forecast with staffing suggestions. A <button class="hl" data-k="land">forester</button> asks which compartments need thinning and the answer draws on the twin, the sensor network and thirty years of records. A <button class="hl" data-k="archive">curator</button> asks what the archive holds on the fourth Duke's planting schemes and surfaces material that would have taken a week to find. An <button class="hl" data-k="pye">apprentice at Pye Homes</button> asks how a detail was solved on the last development and learns from the company's own memory instead of starting again. This matters because the value of what the Innovation team has built multiplies when it stops living in separate systems and starts answering questions together, and because it turns AI adoption from a training programme into the way the estate simply works. It serves the goals Blenheim has set itself, the <button class="hl" data-k="goals">endowment</button> through efficiency, the visitors through better operations, the land through continuous monitoring, and the mission through access, because <button class="hl" data-k="mission">an estate you can ask is an estate you can share</button>. Three hundred years ago Blenheim was built as a statement of what a nation could do. The next statement is quieter, an estate that knows itself, and I would like to help build it.</p>
+            <p class="para reveal" id="para">Blenheim has already built the hard parts, a <button class="hl" data-k="twin">digital twin of the Palace</button>, <button class="hl" data-k="vms">visitor forecasting</button> that improved accuracy by around 80%, open-source sensors that <button class="hl" data-k="base">listen to birds, bats and even the soil</button>, a guide that <button class="hl" data-k="culturati">adapts its storytelling to each visitor</button>, and a workforce where <button class="hl" data-k="adoption">42% of staff</button> use AI in their daily work. My goal for the next phase is to connect them into <button class="hl" data-k="goal">one conversational layer</button> over the whole estate, so that anyone who works here can put a question in plain English to Blenheim's own data. A <button class="hl" data-k="ops">duty manager</button> asks what Saturday looks like and gets a forecast with staffing suggestions, and a <button class="hl" data-k="land">forester</button> asks which compartments need thinning and hears back from the twin, the sensor network and thirty years of records. A <button class="hl" data-k="archive">curator</button> asks what the archive holds on the fourth Duke's planting schemes and finds in a minute what once took a week, and an <button class="hl" data-k="pye">apprentice at Pye Homes</button> asks how the last site solved a detail and inherits the company's memory instead of starting again. Everything the Innovation team has built multiplies in value when it stops living in separate systems and starts answering questions together, and adoption stops being a training programme and becomes the way the estate simply works. The same layer serves the goals Blenheim has set itself, the <button class="hl" data-k="goals">endowment</button> through hours saved, the visitors through calmer operations, the land through continuous monitoring, and the mission most of all, because <button class="hl" data-k="mission">an estate you can ask is an estate you can share</button>. Three hundred years ago the nation built Blenheim as a statement of what it could do, and the next one is quieter, an estate that knows itself, and I would like to help build it.</p>
         </div>
 
         <aside class="dock reveal" id="dock">
@@ -635,7 +746,7 @@
             <div class="dots" id="dots"></div>
             <div class="dock-img" id="dockImg"></div>
             <div class="dock-body" id="dockBody">
-                <p class="dock-empty">Tap any underlined phrase.<br>Each one lands the goal in a different strand of the estate.</p>
+                <p class="dock-empty">Tap any underlined phrase to open<br>the strand of the estate it belongs to.</p>
             </div>
             <div class="dock-nav" id="dockNav" style="display:none;">
                 <button id="prevBtn">← Previous</button>
@@ -644,6 +755,28 @@
                 <span class="kbd-hint">or use ← → keys</span>
             </div>
         </aside>
+    </div>
+</div>
+
+<div class="wiz-scrim" id="wizScrim">
+    <div class="wiz" role="dialog" aria-modal="true" aria-label="How this page works">
+        <div id="wizStep1">
+            <div class="wiz-step-label">Step 1 of 2 · Read it</div>
+            <h3>One paragraph is the whole application.</h3>
+            <p>The brief asks for a single innovation goal in 250 to 350 words, and that is exactly what sits on this page. Press Read as submitted in the top bar any time to see it plain.</p>
+        </div>
+        <div id="wizStep2" style="display:none;">
+            <div class="wiz-step-label">Step 2 of 2 · Open it</div>
+            <h3>The underlines go somewhere.</h3>
+            <div class="wiz-demo">Tap a phrase like <span class="fakehl">digital twin of the Palace</span> and it opens into that strand of the estate.</div>
+            <p>The dots and arrow keys walk all twelve strands, the tour plays them for you, and the ask box takes questions about the goal or about James.</p>
+        </div>
+        <div class="wiz-row">
+            <div class="wiz-dots"><span class="on" id="wd1"></span><span id="wd2"></span></div>
+            <span class="spacer"></span>
+            <button class="wiz-skip" id="wizSkip">Skip</button>
+            <button class="wiz-next" id="wizNext">Next</button>
+        </div>
     </div>
 </div>
 
@@ -656,7 +789,7 @@
             <a href="mailto:james@manual-focus.co.uk">james@manual-focus.co.uk</a> · 07897 714630<br>
             <a href="https://scylark.github.io/interactive-resume/" target="_blank" rel="noopener">Interactive portfolio: scylark.github.io/interactive-resume</a>
         </p>
-        <p class="foot-credit">Photography and digital twin imagery courtesy of Blenheim Palace, used with permission. Built by James with AI in the loop, which is rather the point.</p>
+        <p class="foot-credit">Photography and digital twin imagery courtesy of Blenheim Palace, used with permission. Built by James with AI in the loop.</p>
     </div>
 </footer>
 
@@ -973,7 +1106,7 @@ fetch('https://api.open-meteo.com/v1/forecast?latitude=51.848&longitude=-1.354&c
         const w = Math.round(d.current.wind_speed_10m);
         document.getElementById('liveText').innerHTML = 'Over the estate now: <b>' + t + '°C · ' + w + ' mph</b>';
         document.getElementById('liveChip').classList.add('show');
-        CARDS.ops.text += ' Right now it is ' + t + '°C with a ' + w + ' mph wind over Woodstock, and this page checked, which is rather the idea.';
+        CARDS.ops.text += ' Right now it is ' + t + '°C with a ' + w + ' mph wind over Woodstock, and this page checked before telling you.';
     })
     .catch(() => {});
 
@@ -998,6 +1131,33 @@ window.addEventListener('scroll', () => {
         ticking = false;
     });
 }, { passive: true });
+
+/* ---------- Wizard ---------- */
+const wizScrim = document.getElementById('wizScrim');
+const wizStep1 = document.getElementById('wizStep1');
+const wizStep2 = document.getElementById('wizStep2');
+const wizNext = document.getElementById('wizNext');
+let wizStep = 1;
+
+function wizShow(step) {
+    wizStep = step;
+    wizStep1.style.display = step === 1 ? 'block' : 'none';
+    wizStep2.style.display = step === 2 ? 'block' : 'none';
+    document.getElementById('wd1').classList.toggle('on', step === 1);
+    document.getElementById('wd2').classList.toggle('on', step === 2);
+    wizNext.textContent = step === 1 ? 'Next' : 'Start reading';
+}
+function wizOpen() { wizShow(1); wizScrim.classList.add('open'); }
+function wizClose() {
+    wizScrim.classList.remove('open');
+    try { localStorage.setItem('wizardSeen', '1'); } catch (e) {}
+}
+wizNext.addEventListener('click', () => { if (wizStep === 1) wizShow(2); else wizClose(); });
+document.getElementById('wizSkip').addEventListener('click', wizClose);
+document.getElementById('wizOpen').addEventListener('click', wizOpen);
+wizScrim.addEventListener('click', (e) => { if (e.target === wizScrim) wizClose(); });
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && wizScrim.classList.contains('open')) wizClose(); });
+try { if (!localStorage.getItem('wizardSeen')) setTimeout(wizOpen, 900); } catch (e) {}
 
 /* ---------- Reveals + highlight wake ---------- */
 const io = new IntersectionObserver((entries) => {
