@@ -9,7 +9,9 @@
         --paper: #faf7f0;
         --ink: #1e1c17;
         --ink-soft: #5c574c;
+        --cream: #f5efe2;
         --gold: #a8842c;
+        --gold-bright: #d4af5c;
         --gold-soft: rgba(168, 132, 44, 0.14);
         --gold-mid: rgba(168, 132, 44, 0.32);
         --green: #2e4632;
@@ -20,7 +22,6 @@
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
-
     html { scroll-behavior: smooth; }
 
     body {
@@ -31,46 +32,89 @@
         -webkit-font-smoothing: antialiased;
     }
 
-    .frame {
+    .frame { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+
+    /* ---------- Hero ---------- */
+    .hero {
+        position: relative;
+        min-height: 78vh;
+        display: flex;
+        align-items: flex-end;
+        background: var(--ink);
+        overflow: hidden;
+    }
+    .hero-img {
+        position: absolute;
+        inset: 0;
+        background-image: url('img/hero.jpg');
+        background-size: cover;
+        background-position: center 40%;
+        transform: scale(1.02);
+    }
+    .hero::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to top,
+            rgba(20, 22, 16, 0.88) 0%,
+            rgba(20, 22, 16, 0.45) 34%,
+            rgba(20, 22, 16, 0.12) 60%,
+            rgba(20, 22, 16, 0.25) 100%);
+    }
+    .hero-inner {
+        position: relative;
+        z-index: 2;
+        width: 100%;
         max-width: 1180px;
         margin: 0 auto;
-        padding: 0 24px;
+        padding: 0 24px 64px;
+        color: var(--cream);
     }
-
-    /* ---------- Header ---------- */
-    header {
-        padding: 64px 0 40px;
-        text-align: center;
-        border-bottom: 1px solid var(--rule);
-    }
-    .kicker {
+    .hero .kicker {
         font-family: var(--sans);
-        font-size: 11px;
-        letter-spacing: 0.22em;
+        font-size: 12px;
+        letter-spacing: 0.26em;
         text-transform: uppercase;
-        color: var(--gold);
-        margin-bottom: 14px;
+        color: var(--gold-bright);
+        margin-bottom: 16px;
     }
-    header h1 {
-        font-size: clamp(28px, 5vw, 44px);
+    .hero h1 {
+        font-size: clamp(34px, 6vw, 64px);
         font-weight: 500;
-        letter-spacing: -0.01em;
-        line-height: 1.15;
+        letter-spacing: -0.012em;
+        line-height: 1.08;
+        max-width: 800px;
+        text-wrap: balance;
     }
-    .byline {
-        margin-top: 14px;
+    .hero .byline {
+        margin-top: 20px;
         font-family: var(--sans);
-        font-size: 13px;
-        color: var(--ink-soft);
+        font-size: 14px;
+        color: rgba(245, 239, 226, 0.85);
     }
-    .byline strong { color: var(--ink); font-weight: 600; }
+    .hero .byline strong { color: #fff; font-weight: 600; }
+    .hero .scrollcue {
+        margin-top: 28px;
+        font-family: var(--sans);
+        font-size: 12px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: rgba(245, 239, 226, 0.65);
+    }
+    .hero .scrollcue::after {
+        content: "↓";
+        display: inline-block;
+        margin-left: 8px;
+        animation: bob 2s ease-in-out infinite;
+    }
+    @keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(4px); } }
 
     /* ---------- Meta bar ---------- */
     .metabar {
         position: sticky;
         top: 0;
         z-index: 40;
-        background: rgba(250, 247, 240, 0.92);
+        background: rgba(250, 247, 240, 0.94);
         backdrop-filter: blur(8px);
         border-bottom: 1px solid var(--rule);
         font-family: var(--sans);
@@ -82,7 +126,7 @@
         padding: 10px 24px;
         display: flex;
         align-items: center;
-        gap: 16px;
+        gap: 14px;
         flex-wrap: wrap;
     }
     .chip {
@@ -118,9 +162,9 @@
     /* ---------- Layout ---------- */
     .stage {
         display: grid;
-        grid-template-columns: minmax(0, 680px) minmax(300px, 400px);
+        grid-template-columns: minmax(0, 660px) minmax(310px, 420px);
         gap: 56px;
-        padding: 56px 0 40px;
+        padding: 64px 0 48px;
         align-items: start;
     }
 
@@ -130,13 +174,14 @@
         font-family: var(--sans);
         font-size: 12.5px;
         color: var(--ink-soft);
-        margin-bottom: 26px;
+        margin-bottom: 30px;
         padding-left: 14px;
         border-left: 2px solid var(--gold);
+        line-height: 1.7;
     }
     .para {
         font-size: clamp(18px, 2.1vw, 21.5px);
-        line-height: 1.85;
+        line-height: 1.88;
         letter-spacing: 0.002em;
     }
     .para .hl {
@@ -169,26 +214,20 @@
         opacity: 0.7;
     }
 
-    /* Plain mode */
-    body.plain .para .hl {
-        background: none;
-        border-bottom: none;
-        cursor: text;
-        pointer-events: none;
-    }
+    body.plain .para .hl { background: none; border-bottom: none; cursor: text; pointer-events: none; }
     body.plain .para .hl.visited::after { display: none; }
     body.plain .dock, body.plain .instruction { display: none; }
     body.plain .stage { grid-template-columns: minmax(0, 680px); justify-content: center; }
 
-    /* ---------- Dock (annotation panel) ---------- */
+    /* ---------- Dock ---------- */
     .dock {
         position: sticky;
-        top: 64px;
+        top: 60px;
         border: 1px solid var(--rule);
-        border-radius: 10px;
+        border-radius: 12px;
         background: var(--card);
         overflow: hidden;
-        box-shadow: 0 1px 3px rgba(30, 28, 23, 0.05);
+        box-shadow: 0 2px 14px rgba(30, 28, 23, 0.07);
     }
     .dock-head {
         display: flex;
@@ -203,7 +242,20 @@
         color: var(--ink-soft);
     }
     .dock-head .count { color: var(--gold); font-weight: 600; letter-spacing: 0; text-transform: none; }
-    .dock-body { padding: 22px 22px 26px; min-height: 250px; }
+    .dock-img {
+        height: 180px;
+        background-size: cover;
+        background-position: center;
+        display: none;
+        position: relative;
+    }
+    .dock-img.show { display: block; }
+    .dock-img::after {
+        content: "";
+        position: absolute; inset: 0;
+        background: linear-gradient(to top, rgba(30,28,23,0.35), transparent 45%);
+    }
+    .dock-body { padding: 22px 24px 24px; min-height: 210px; }
     .dock-strand {
         font-family: var(--sans);
         font-size: 10.5px;
@@ -213,18 +265,8 @@
         color: var(--green);
         margin-bottom: 8px;
     }
-    .dock-title {
-        font-size: 21px;
-        font-weight: 600;
-        line-height: 1.3;
-        margin-bottom: 12px;
-    }
-    .dock-text {
-        font-size: 15px;
-        line-height: 1.7;
-        color: var(--ink);
-        margin-bottom: 16px;
-    }
+    .dock-title { font-size: 21px; font-weight: 600; line-height: 1.3; margin-bottom: 12px; }
+    .dock-text { font-size: 15px; line-height: 1.7; margin-bottom: 16px; }
     .dock-chip {
         display: inline-block;
         font-family: var(--sans);
@@ -242,14 +284,10 @@
         font-size: 14.5px;
         line-height: 1.7;
         font-style: italic;
-        padding-top: 40px;
+        padding-top: 34px;
         text-align: center;
     }
-    .dock-nav {
-        display: flex;
-        gap: 8px;
-        padding: 0 22px 18px;
-    }
+    .dock-nav { display: flex; gap: 8px; padding: 0 24px 20px; }
     .dock-nav button {
         font-family: var(--sans);
         font-size: 11.5px;
@@ -261,61 +299,100 @@
         cursor: pointer;
     }
     .dock-nav button:hover { border-color: var(--gold); color: var(--ink); }
+    .dock-close-x {
+        display: none;
+        background: none; border: none;
+        font-size: 20px; color: var(--ink-soft);
+        cursor: pointer; line-height: 1;
+    }
 
     /* ---------- Footer ---------- */
-    footer {
-        border-top: 1px solid var(--rule);
-        margin-top: 48px;
-        padding: 40px 0 64px;
+    .footband {
+        position: relative;
+        margin-top: 56px;
+        background: var(--ink);
+        color: var(--cream);
+        overflow: hidden;
+    }
+    .footband-img {
+        position: absolute; inset: 0;
+        background-image: url('img/trees.jpg');
+        background-size: cover;
+        background-position: center 60%;
+        opacity: 0.5;
+    }
+    .footband::after {
+        content: "";
+        position: absolute; inset: 0;
+        background: linear-gradient(to bottom, rgba(20,22,16,0.55), rgba(20,22,16,0.88));
+    }
+    .footband-inner {
+        position: relative;
+        z-index: 2;
+        max-width: 720px;
+        margin: 0 auto;
+        padding: 72px 24px 64px;
+        text-align: center;
+    }
+    .footband .foot-note {
+        font-size: clamp(16px, 2vw, 19px);
+        font-style: italic;
+        line-height: 1.75;
+        margin-bottom: 34px;
+        color: rgba(245, 239, 226, 0.94);
+    }
+    .footband .foot-id {
         font-family: var(--sans);
         font-size: 13px;
-        color: var(--ink-soft);
-        text-align: center;
-        line-height: 2;
+        line-height: 2.1;
+        color: rgba(245, 239, 226, 0.8);
     }
-    footer a { color: var(--green); text-decoration: none; border-bottom: 1px solid var(--rule); }
-    footer a:hover { border-bottom-color: var(--green); }
-    .foot-note {
-        max-width: 560px;
-        margin: 0 auto 18px;
-        font-style: italic;
-        font-family: var(--serif);
-        font-size: 14.5px;
+    .footband .foot-id strong { color: #fff; }
+    .footband a { color: var(--gold-bright); text-decoration: none; }
+    .footband a:hover { text-decoration: underline; }
+    .foot-credit {
+        margin-top: 26px;
+        font-family: var(--sans);
+        font-size: 11px;
+        letter-spacing: 0.05em;
+        color: rgba(245, 239, 226, 0.55);
     }
 
     /* ---------- Mobile ---------- */
     @media (max-width: 900px) {
-        .stage { grid-template-columns: 1fr; gap: 0; padding-top: 36px; }
+        .hero { min-height: 64vh; }
+        .stage { grid-template-columns: 1fr; gap: 0; padding-top: 40px; }
         .dock {
             position: fixed;
             left: 0; right: 0; bottom: 0;
             top: auto;
             border-radius: 16px 16px 0 0;
             border-bottom: none;
-            box-shadow: 0 -8px 30px rgba(30, 28, 23, 0.18);
+            box-shadow: 0 -8px 30px rgba(30, 28, 23, 0.2);
             transform: translateY(110%);
             transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
             z-index: 60;
-            max-height: 62vh;
+            max-height: 72vh;
             overflow-y: auto;
         }
         .dock.open { transform: translateY(0); }
         .dock-body { min-height: 0; }
         .dock-close-x { display: block; }
+        .dock-img { height: 130px; }
     }
-    .dock-close-x {
-        display: none;
-        background: none;
-        border: none;
-        font-size: 20px;
-        color: var(--ink-soft);
-        cursor: pointer;
-        line-height: 1;
-    }
-    @media (max-width: 900px) { .dock-close-x { display: block; } }
 </style>
 </head>
 <body>
+
+<section class="hero">
+    <div class="hero-img"></div>
+    <div class="hero-inner">
+        <div class="kicker">An application in one paragraph</div>
+        <h1>An estate that knows itself.</h1>
+        <p class="byline"><strong>James Vickers</strong> MCIM MCPR · applying for AI &amp; Innovation Lead, Blenheim Palace</p>
+        <p class="scrollcue">The paragraph</p>
+    </div>
+</section>
 
 <div class="metabar">
     <div class="metabar-inner">
@@ -328,12 +405,6 @@
 </div>
 
 <div class="frame">
-    <header>
-        <div class="kicker">An application in one paragraph</div>
-        <h1>AI &amp; Innovation Lead<br>Blenheim Palace</h1>
-        <p class="byline"><strong>James Vickers</strong> · MCIM MCPR · Marketer, founder and AI operator</p>
-    </header>
-
     <div class="stage">
         <div class="para-wrap">
             <p class="instruction">The brief asks for one innovation goal in 250–350 words. This is that paragraph, at 300 words for a 300-year-old estate. The underlined phrases open out — each one lands the goal in a different strand of Blenheim. Or press "Read as submitted" for the plain text.</p>
@@ -347,6 +418,7 @@
                 <span class="count" id="explored">0 / 12 explored</span>
                 <button class="dock-close-x" id="dockClose" aria-label="Close">×</button>
             </div>
+            <div class="dock-img" id="dockImg"></div>
             <div class="dock-body" id="dockBody">
                 <p class="dock-empty">Tap any underlined phrase.<br>Each one lands the goal in a different strand of the estate.</p>
             </div>
@@ -356,88 +428,104 @@
             </div>
         </aside>
     </div>
+</div>
 
-    <footer>
+<footer class="footband">
+    <div class="footband-img"></div>
+    <div class="footband-inner">
         <p class="foot-note">This page is the alternative format the brief invites. The paragraph above, read plainly, is the application — the page around it is a small working demonstration of the goal it proposes: one surface that opens into every strand of the estate.</p>
-        <p>
-            <strong style="color: var(--ink);">James Vickers</strong> MCIM MCPR<br>
+        <p class="foot-id">
+            <strong>James Vickers</strong> MCIM MCPR<br>
             <a href="mailto:james@manual-focus.co.uk">james@manual-focus.co.uk</a> · 07897 714630<br>
             <a href="https://scylark.github.io/interactive-resume/" target="_blank" rel="noopener">Interactive portfolio: scylark.github.io/interactive-resume</a>
         </p>
-    </footer>
-</div>
+        <p class="foot-credit">Photography and digital twin imagery courtesy of Blenheim Palace, used with permission.</p>
+    </div>
+</footer>
 
 <script>
 const CARDS = {
     twin: {
         strand: "Digital Twin",
         title: "The estate's memory of itself",
+        img: "img/twin.jpg",
         text: "The twin your team built with Oxford — the Palace catalogued into 14,000 metadata-tagged elements — becomes the backbone the conversational layer answers from. Every asset record, condition survey and maintenance history stops being a database someone has to know exists and becomes an answer anyone can ask for.",
         chip: "<b>14,000</b> catalogued elements · Digital Twin programme, moving from concept to archetype"
     },
     vms: {
         strand: "SmartVMS · Operations",
         title: "Forecasts become answers, not dashboards",
+        img: "img/lawnaerial.jpg",
         text: "SmartVMS improved forecast accuracy by around 80% — but a dashboard still needs someone to open it. Folded into one conversational layer, the same intelligence reaches every duty manager, caterer and events lead as a plain-English answer at the moment they need it.",
         chip: "<b>~80%</b> forecast accuracy improvement · Innovate UK / Oxford Brookes KTP"
     },
     base: {
         strand: "BASE · Weaveley",
         title: "Land health you can ask about",
+        img: "img/soil.jpg",
         text: "Your bioacoustics work at Weaveley — birds, bats, and the pioneering soil ecoacoustics — produces longitudinal data most estates could only dream of. Connected, it makes the land itself queryable: how is the soil this spring, which margins are recovering, what changed since the baseline year.",
         chip: "Open-source sensors · <b>soil ecoacoustics</b> · Year 2 longitudinal study"
     },
     culturati: {
         strand: "CULTURATI",
         title: "Your own adaptive-storytelling principle, turned inward",
+        img: "img/tours.jpg",
         text: "CULTURATI proved Blenheim can build storytelling that adapts to each listener — including Archie Illingworth's voice guiding visitors again. The conversational layer is the same principle pointed at the people who run the estate. This page works the same way, which is rather the point.",
         chip: "Horizon Europe · completed Jan 2026 · <b>2</b> prototype applications"
     },
     adoption: {
         strand: "People & Adoption",
         title: "From training programme to ambient tool",
+        img: "img/team.jpg",
         text: "You've trained ~100 staff and reached 42% daily use — an adoption rate most corporations would envy. The ceiling on adoption isn't willingness, it's friction: twenty tools, twenty logins. One interface grounded in Blenheim's own data collapses that friction and makes the next 58% a matter of habit, not persuasion.",
         chip: "<b>~100</b> staff trained · <b>42%</b> daily AI use · 30-day reinforcement programme"
     },
     goal: {
         strand: "The Goal",
         title: "One conversational layer over the whole estate",
+        img: "img/spot.jpg",
         text: "A single ask-anything interface, grounded in the estate's own systems with permissions and provenance built in — answers cite their source. Start deliberately small: three data sources, one team, one quarter, measured in hours saved the way your finance app already is. Then widen, strand by strand. Capability-building becomes targeted implementation — your own stated next phase.",
         chip: "Builds on internal AI apps already saving <b>~5 hrs</b> (finance), <b>~6 hrs</b> (HR), <b>up to 6 days</b> (Pye)"
     },
     ops: {
         strand: "Visitor Business",
         title: "Busy Saturdays, calmly run",
+        img: "img/dronepark.jpg",
         text: "The 750,000 paying-visitor ambition is won and lost on peak days. When any duty manager can ask what Saturday looks like — footfall, weather off the anemometric network, staffing gaps — and get an answer with suggestions, operational resilience stops depending on who happens to be on shift.",
         chip: "Ten-year goal: <b>750,000</b> paying visitors · SmartVMS + anemometric sensor network"
     },
     land: {
         strand: "Estate & Land",
         title: "Thirty years of context in thirty seconds",
+        img: "img/forestry.jpg",
         text: "Six hundred thousand trees, regenerative agriculture, carbon-neutral by 2027 and 230,000 tonnes of CO2e to remove by 2050 — stewardship at this scale runs on decisions made with context. A forester who can ask the twin, the sensors and three decades of records in one question makes better calls, faster, and leaves a record of why.",
         chip: "<b>600,000</b> trees · carbon neutral <b>2027</b> · <b>230,000</b> tonnes CO2e removal by 2050"
     },
     archive: {
         strand: "Collections & Archive",
         title: "Three centuries, retrievable",
+        img: "img/roof.jpg",
         text: "Blenheim's goal of reacquiring lost collection works starts with knowing — deeply, searchably — what the archive already holds. Retrieval-grounded AI over the estate's own records turns three hundred years of correspondence, planting schemes and inventories into a resource for curators, scholars and the storytelling the Palace sells tickets on.",
         chip: "Ten-year goal: <b>reacquire lost works</b> · 300 years of estate records"
     },
     pye: {
         strand: "Pye Homes",
         title: "Institutional memory as a teaching tool",
+        img: "img/pye.jpg",
         text: "Pye has been building in Oxfordshire since 1927, and your internal AI work there already saves up to six days of workload. For the 100-apprentice ambition, the same layer becomes a teacher: how did we solve this detail last time, what did the site team learn, who signed it off. New people inherit the company's memory instead of rediscovering it.",
         chip: "Pye Homes since <b>1927</b> · internal app saves <b>up to 6 days</b> · goal: <b>100+</b> apprentices"
     },
     goals: {
         strand: "The Ten-Year Goals",
         title: "Efficiency that compounds into endowment",
+        img: "img/southlawn.jpg",
         text: "The £45M endowment and tripled local economic contribution are funded, ultimately, by margin — and the hours this layer saves are margin. Your own numbers already prove the mechanism at small scale. Multiply it across every strand and efficiency stops being an IT line item and starts being an endowment strategy.",
         chip: "Ten-year goals: <b>£45M</b> endowment · <b>3×</b> local economic contribution · Top 100 employer"
     },
     mission: {
         strand: "The Mission",
         title: "An estate you can ask is an estate you can share",
+        img: "img/walk.jpg",
         text: "The mission is to share and protect this place, enhance local lives and be the lifeblood of the local economy. Access is the thread through all three — and a conversational layer is, in the end, an instrument of access: for staff first, then researchers, schools, and the community the estate exists to serve.",
         chip: "“To share and protect this place for future generations” · Heritage Foundation, charity no. 1166164"
     }
@@ -449,6 +537,7 @@ let current = null;
 
 const dock = document.getElementById('dock');
 const dockBody = document.getElementById('dockBody');
+const dockImg = document.getElementById('dockImg');
 const dockNav = document.getElementById('dockNav');
 const explored = document.getElementById('explored');
 const hls = document.querySelectorAll('.hl');
@@ -462,6 +551,8 @@ function show(key) {
         h.classList.toggle('active', h.dataset.k === key);
         if (visited.has(h.dataset.k)) h.classList.add('visited');
     });
+    dockImg.style.backgroundImage = "url('" + c.img + "')";
+    dockImg.classList.add('show');
     dockBody.innerHTML =
         '<div class="dock-strand">' + c.strand + '</div>' +
         '<div class="dock-title">' + c.title + '</div>' +
@@ -484,11 +575,9 @@ document.getElementById('nextBtn').addEventListener('click', () => {
 });
 document.getElementById('dockClose').addEventListener('click', () => dock.classList.remove('open'));
 
-/* Word count — computed honestly from the rendered paragraph text */
 const plainText = document.getElementById('para').innerText.replace(/\s+/g, ' ').trim();
 document.getElementById('wordCount').textContent = plainText.split(' ').length;
 
-/* Plain mode + copy */
 const plainToggle = document.getElementById('plainToggle');
 plainToggle.addEventListener('click', () => {
     document.body.classList.toggle('plain');
