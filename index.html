@@ -287,7 +287,7 @@
         padding-top: 34px;
         text-align: center;
     }
-    .dock-nav { display: flex; gap: 8px; padding: 0 24px 20px; }
+    .dock-nav { display: flex; gap: 8px; padding: 0 24px 20px; align-items: center; }
     .dock-nav button {
         font-family: var(--sans);
         font-size: 11.5px;
@@ -299,6 +299,89 @@
         cursor: pointer;
     }
     .dock-nav button:hover { border-color: var(--gold); color: var(--ink); }
+    .dock-nav .kbd-hint {
+        margin-left: auto;
+        font-family: var(--sans);
+        font-size: 10.5px;
+        color: var(--ink-soft);
+        opacity: 0.7;
+    }
+
+    /* ---------- Strand dots ---------- */
+    .dots {
+        display: flex;
+        gap: 7px;
+        padding: 12px 24px;
+        border-bottom: 1px solid var(--rule);
+    }
+    .dots button {
+        width: 9px; height: 9px;
+        border-radius: 50%;
+        border: 1px solid var(--gold-mid);
+        background: transparent;
+        cursor: pointer;
+        padding: 0;
+        transition: all 0.15s ease;
+    }
+    .dots button:hover { transform: scale(1.35); border-color: var(--gold); }
+    .dots button.on { background: var(--gold); border-color: var(--gold); }
+    .dots button.now { box-shadow: 0 0 0 3px var(--gold-soft); }
+
+    /* ---------- Ask box ---------- */
+    .askbox {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 30px;
+    }
+    .askbox input {
+        flex: 1;
+        font-family: var(--serif);
+        font-size: 15.5px;
+        padding: 11px 16px;
+        border: 1px solid var(--rule);
+        border-radius: 10px;
+        background: var(--card);
+        color: var(--ink);
+        outline: none;
+        transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    .askbox input:focus { border-color: var(--gold); box-shadow: 0 0 0 3px var(--gold-soft); }
+    .askbox input::placeholder { color: var(--ink-soft); opacity: 0.75; font-style: italic; }
+    .askbox button {
+        font-family: var(--sans);
+        font-size: 13px;
+        padding: 0 20px;
+        border-radius: 10px;
+        border: none;
+        background: var(--green);
+        color: var(--cream);
+        cursor: pointer;
+        transition: background 0.15s ease;
+    }
+    .askbox button:hover { background: var(--ink); }
+    .ask-echo {
+        font-family: var(--sans);
+        font-size: 12px;
+        color: var(--green);
+        background: rgba(46, 70, 50, 0.07);
+        border-left: 2px solid var(--green);
+        padding: 8px 12px;
+        margin-bottom: 14px;
+        border-radius: 0 6px 6px 0;
+        display: none;
+    }
+    .ask-echo.show { display: block; }
+    body.plain .askbox, body.plain .ask-echo { display: none; }
+
+    /* ---------- Live weather chip ---------- */
+    .chip.live { display: none; }
+    .chip.live.show { display: inline-flex; }
+    .chip.live .pulse {
+        width: 6px; height: 6px; border-radius: 50%;
+        background: var(--green);
+        animation: pulse-dot 2.4s ease-in-out infinite;
+    }
+    @keyframes pulse-dot { 0%,100% { opacity: 1; } 50% { opacity: 0.35; } }
     .dock-close-x {
         display: none;
         background: none; border: none;
@@ -398,6 +481,7 @@
     <div class="metabar-inner">
         <span class="chip"><span class="dot"></span><b id="wordCount">–</b>&nbsp;words · one paragraph</span>
         <span class="chip">Brief: 250–350 · <b>within limit</b></span>
+        <span class="chip live" id="liveChip" title="Live conditions over Woodstock — the estate already talks, if you listen."><span class="pulse"></span><span id="liveText"></span></span>
         <span class="spacer"></span>
         <button class="btn" id="plainToggle">Read as submitted</button>
         <button class="btn primary" id="copyBtn">Copy plain text</button>
@@ -407,7 +491,13 @@
 <div class="frame">
     <div class="stage">
         <div class="para-wrap">
-            <p class="instruction">The brief asks for one innovation goal in 250–350 words. This is that paragraph, at 300 words for a 300-year-old estate. The underlined phrases open out — each one lands the goal in a different strand of Blenheim. Or press "Read as submitted" for the plain text.</p>
+            <p class="instruction">The brief asks for one innovation goal in 250–350 words. This is that paragraph, at 300 words for a 300-year-old estate. The underlined phrases open out — each one lands the goal in a different strand of Blenheim. Ask the page a question, take the tour, or press "Read as submitted" for the plain text.</p>
+
+            <div class="askbox">
+                <input type="text" id="askInput" placeholder="Ask this page — try &ldquo;how would this help the gardens?&rdquo;" autocomplete="off">
+                <button id="askBtn">Ask</button>
+            </div>
+            <div class="ask-echo" id="askEcho"></div>
 
             <p class="para" id="para">Blenheim has already built the hard parts. A <button class="hl" data-k="twin">digital twin of the Palace</button> catalogued in 14,000 elements, <button class="hl" data-k="vms">visitor forecasting</button> that improved accuracy by around 80%, open-source sensors at Weaveley <button class="hl" data-k="base">listening to birds, bats and even the soil</button>, an EU-funded guide that <button class="hl" data-k="culturati">adapts its storytelling to each visitor</button>, and a workforce where <button class="hl" data-k="adoption">42% of staff</button> use AI in their daily work. My goal for the next phase is to connect them. <button class="hl" data-k="goal">One conversational layer</button> over the whole estate, so anyone who works here can ask a question in plain English and get an answer drawn from Blenheim's own data. A <button class="hl" data-k="ops">duty manager</button> asks what Saturday looks like and gets a forecast with staffing suggestions. A <button class="hl" data-k="land">forester</button> asks which compartments need thinning and the answer draws on the twin, the sensor network and thirty years of records. A <button class="hl" data-k="archive">curator</button> asks what the archive holds on the fourth Duke's planting schemes and surfaces material that would have taken a week to find. An <button class="hl" data-k="pye">apprentice at Pye Homes</button> asks how a detail was solved on the last development and learns from the company's own memory instead of starting again. This matters because the value of what the Innovation team has built multiplies when it stops living in separate systems and starts answering questions together, and because it turns AI adoption from a training programme into the way the estate simply works. It serves the goals Blenheim has set itself, the <button class="hl" data-k="goals">endowment</button> through efficiency, the visitors through better operations, the land through continuous monitoring, and the mission through access, because <button class="hl" data-k="mission">an estate you can ask is an estate you can share</button>. Three hundred years ago Blenheim was built as a statement of what a nation could do. The next statement is quieter, an estate that knows itself, and I would like to help build it.</p>
         </div>
@@ -418,6 +508,7 @@
                 <span class="count" id="explored">0 / 12 explored</span>
                 <button class="dock-close-x" id="dockClose" aria-label="Close">×</button>
             </div>
+            <div class="dots" id="dots"></div>
             <div class="dock-img" id="dockImg"></div>
             <div class="dock-body" id="dockBody">
                 <p class="dock-empty">Tap any underlined phrase.<br>Each one lands the goal in a different strand of the estate.</p>
@@ -425,6 +516,8 @@
             <div class="dock-nav" id="dockNav" style="display:none;">
                 <button id="prevBtn">← Previous</button>
                 <button id="nextBtn">Next strand →</button>
+                <button id="tourBtn">▸ Tour all 12</button>
+                <span class="kbd-hint">or use ← → keys</span>
             </div>
         </aside>
     </div>
@@ -532,17 +625,52 @@ const CARDS = {
 };
 
 const ORDER = ["twin","vms","base","culturati","adoption","goal","ops","land","archive","pye","goals","mission"];
+
+const KEYWORDS = {
+    twin:      ["twin","building","palace","fabric","maintenance","asset","assets","roof","restoration","survey","condition","repairs","stone","oxford"],
+    vms:       ["forecast","forecasting","visitors","footfall","staffing","rota","busy","crowds","tickets","ticketing","predict","planning"],
+    base:      ["soil","birds","bats","wildlife","biodiversity","sensors","solar","weaveley","nature","ecology","acoustic","bioacoustics","species","garden","gardens","planting"],
+    culturati: ["story","storytelling","tour","tours","guide","voice","experience","app","audio","interpretation","archie","adaptive"],
+    adoption:  ["staff","training","people","adoption","skills","workshops","team","culture","change","learning","confidence","managers"],
+    goal:      ["layer","interface","chat","chatbot","ask","questions","connect","ai","data","systems","provenance","permissions","assistant","start","first","how","begin"],
+    ops:       ["duty","operations","events","weather","wind","opening","queues","cafe","café","retail","weekend","saturday","safety","manager"],
+    land:      ["forest","forestry","tree","trees","farming","carbon","thinning","woodland","park","land","zero","regenerative","estate","hectares","wetland"],
+    archive:   ["archive","archives","curator","collection","collections","history","records","duke","brown","capability","letters","paintings","art","scholars","research"],
+    pye:       ["pye","homes","housing","houses","apprentice","apprentices","construction","building","development","oxfordshire","families"],
+    goals:     ["endowment","money","efficiency","savings","economy","employer","goals","budget","cost","costs","margin","funding","economic"],
+    mission:   ["mission","share","sharing","community","access","local","schools","charity","future","generations","public","lifeblood"]
+};
+
 const visited = new Set();
 let current = null;
+let tourTimer = null;
 
 const dock = document.getElementById('dock');
 const dockBody = document.getElementById('dockBody');
 const dockImg = document.getElementById('dockImg');
 const dockNav = document.getElementById('dockNav');
 const explored = document.getElementById('explored');
+const dotsWrap = document.getElementById('dots');
+const askEcho = document.getElementById('askEcho');
 const hls = document.querySelectorAll('.hl');
 
-function show(key) {
+/* Strand dots */
+ORDER.forEach(k => {
+    const b = document.createElement('button');
+    b.dataset.k = k;
+    b.title = CARDS[k].strand;
+    b.addEventListener('click', () => { stopTour(); show(k); });
+    dotsWrap.appendChild(b);
+});
+
+function refreshDots() {
+    dotsWrap.querySelectorAll('button').forEach(b => {
+        b.classList.toggle('on', visited.has(b.dataset.k));
+        b.classList.toggle('now', b.dataset.k === current);
+    });
+}
+
+function show(key, echoText) {
     const c = CARDS[key];
     if (!c) return;
     current = key;
@@ -561,19 +689,85 @@ function show(key) {
     dockNav.style.display = 'flex';
     explored.textContent = visited.size + ' / ' + ORDER.length + ' explored';
     dock.classList.add('open');
+    refreshDots();
+    if (echoText) {
+        askEcho.textContent = echoText;
+        askEcho.classList.add('show');
+    }
 }
 
-hls.forEach(h => h.addEventListener('click', () => show(h.dataset.k)));
+hls.forEach(h => h.addEventListener('click', () => { stopTour(); show(h.dataset.k); }));
 
-document.getElementById('prevBtn').addEventListener('click', () => {
-    const i = ORDER.indexOf(current);
-    show(ORDER[(i - 1 + ORDER.length) % ORDER.length]);
+function step(dir) {
+    const i = current ? ORDER.indexOf(current) : (dir > 0 ? -1 : 0);
+    show(ORDER[(i + dir + ORDER.length) % ORDER.length]);
+}
+document.getElementById('prevBtn').addEventListener('click', () => { stopTour(); step(-1); });
+document.getElementById('nextBtn').addEventListener('click', () => { stopTour(); step(1); });
+document.getElementById('dockClose').addEventListener('click', () => { stopTour(); dock.classList.remove('open'); });
+
+/* Keyboard navigation */
+document.addEventListener('keydown', (e) => {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') { stopTour(); step(1); }
+    if (e.key === 'ArrowLeft')  { stopTour(); step(-1); }
+    if (e.key === 'Escape') { stopTour(); dock.classList.remove('open'); }
 });
-document.getElementById('nextBtn').addEventListener('click', () => {
-    const i = ORDER.indexOf(current);
-    show(ORDER[(i + 1) % ORDER.length]);
+
+/* Tour mode */
+const tourBtn = document.getElementById('tourBtn');
+function stopTour() {
+    if (tourTimer) { clearInterval(tourTimer); tourTimer = null; tourBtn.textContent = '▸ Tour all 12'; }
+}
+tourBtn.addEventListener('click', () => {
+    if (tourTimer) { stopTour(); return; }
+    tourBtn.textContent = '⏸ Stop tour';
+    step(1);
+    tourTimer = setInterval(() => {
+        step(1);
+        if (visited.size === ORDER.length && ORDER.indexOf(current) === ORDER.length - 1) stopTour();
+    }, 6500);
 });
-document.getElementById('dockClose').addEventListener('click', () => dock.classList.remove('open'));
+
+/* Ask the page */
+function ask(q) {
+    const tokens = q.toLowerCase().replace(/[^a-z0-9\s]/g, ' ').split(/\s+/).filter(t => t.length > 2);
+    if (!tokens.length) return;
+    let best = null, bestScore = 0;
+    ORDER.forEach(k => {
+        let s = 0;
+        const kws = KEYWORDS[k];
+        const body = (CARDS[k].title + ' ' + CARDS[k].text + ' ' + CARDS[k].strand).toLowerCase();
+        tokens.forEach(t => {
+            if (kws.some(kw => kw === t)) s += 3;
+            else if (kws.some(kw => kw.startsWith(t) || t.startsWith(kw))) s += 2;
+            else if (body.includes(t)) s += 1;
+        });
+        if (s > bestScore) { bestScore = s; best = k; }
+    });
+    stopTour();
+    if (best && bestScore >= 2) {
+        show(best, '“' + q.trim() + '” — that lands in ' + CARDS[best].strand + '.');
+    } else {
+        askEcho.textContent = '“' + q.trim() + '” — beyond this page, but exactly the kind of question the conversational layer is for. Ask me at interview.';
+        askEcho.classList.add('show');
+    }
+}
+const askInput = document.getElementById('askInput');
+document.getElementById('askBtn').addEventListener('click', () => ask(askInput.value));
+askInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') ask(askInput.value); });
+
+/* Live conditions over the estate (Woodstock) — silent on failure */
+fetch('https://api.open-meteo.com/v1/forecast?latitude=51.848&longitude=-1.354&current=temperature_2m,wind_speed_10m&wind_speed_unit=mph')
+    .then(r => r.json())
+    .then(d => {
+        const t = Math.round(d.current.temperature_2m);
+        const w = Math.round(d.current.wind_speed_10m);
+        document.getElementById('liveText').innerHTML = 'Over the estate now: <b>' + t + '°C · ' + w + ' mph wind</b>';
+        document.getElementById('liveChip').classList.add('show');
+        if (CARDS.ops) CARDS.ops.text += ' Right now it is ' + t + '°C with a ' + w + ' mph wind over Woodstock — this page checked, which is rather the idea.';
+    })
+    .catch(() => {});
 
 const plainText = document.getElementById('para').innerText.replace(/\s+/g, ' ').trim();
 document.getElementById('wordCount').textContent = plainText.split(' ').length;
