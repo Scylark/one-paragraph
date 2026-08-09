@@ -4,21 +4,31 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>An Application in One Paragraph — James Vickers</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Mulish:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
+    /* Palette and type aligned to Blenheim's own system:
+       teal #003d4c, plum #43273b, sage #b2b794, heritage red #b2292e,
+       stone neutrals. Kepler Std / Proxima Nova are Typekit-locked to
+       their domain, so the nearest free cousins stand in:
+       Source Serif 4 (Fournier-influenced, like Kepler) and Mulish. */
     :root {
-        --paper: #faf7f0;
-        --ink: #1e1c17;
-        --ink-soft: #5c574c;
-        --cream: #f5efe2;
-        --gold: #a8842c;
-        --gold-bright: #d4af5c;
-        --gold-soft: rgba(168, 132, 44, 0.14);
-        --gold-mid: rgba(168, 132, 44, 0.32);
-        --green: #2e4632;
+        --paper: #f7f6f2;
+        --ink: #212529;
+        --ink-soft: #5b6166;
+        --cream: #eef3f4;
+        --gold: #0e5468;
+        --gold-bright: #e2f0f4;
+        --gold-soft: rgba(0, 61, 76, 0.10);
+        --gold-mid: rgba(0, 61, 76, 0.30);
+        --green: #003d4c;
+        --sage: #b2b794;
+        --red: #b2292e;
         --card: #ffffff;
-        --rule: #e4ddcd;
-        --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
-        --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+        --rule: #ddd9d0;
+        --serif: "Source Serif 4", "Iowan Old Style", Palatino, Georgia, serif;
+        --sans: "Mulish", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -56,10 +66,10 @@
         position: absolute;
         inset: 0;
         background: linear-gradient(to top,
-            rgba(20, 22, 16, 0.88) 0%,
-            rgba(20, 22, 16, 0.45) 34%,
-            rgba(20, 22, 16, 0.12) 60%,
-            rgba(20, 22, 16, 0.25) 100%);
+            rgba(0, 30, 38, 0.88) 0%,
+            rgba(0, 30, 38, 0.45) 34%,
+            rgba(0, 30, 38, 0.10) 60%,
+            rgba(0, 30, 38, 0.25) 100%);
     }
     .hero-inner {
         position: relative;
@@ -278,7 +288,7 @@
         padding: 6px 10px;
         line-height: 1.5;
     }
-    .dock-chip b { color: var(--gold); font-weight: 700; }
+    .dock-chip b { color: var(--red); font-weight: 700; }
     .dock-empty {
         color: var(--ink-soft);
         font-size: 14.5px;
@@ -407,7 +417,7 @@
     .footband::after {
         content: "";
         position: absolute; inset: 0;
-        background: linear-gradient(to bottom, rgba(20,22,16,0.55), rgba(20,22,16,0.88));
+        background: linear-gradient(to bottom, rgba(0,30,38,0.6), rgba(0,30,38,0.92));
     }
     .footband-inner {
         position: relative;
