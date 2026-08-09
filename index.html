@@ -6,7 +6,7 @@
 <title>An Application in One Paragraph — James Vickers</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Mulish:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=Mulish:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
     /* Palette and type aligned to Blenheim's own system:
        teal #003d4c, plum #43273b, sage #b2b794, heritage red #b2292e,
@@ -15,20 +15,22 @@
        Source Serif 4 (Fournier-influenced, like Kepler) and Mulish. */
     :root {
         --paper: #f7f6f2;
-        --ink: #212529;
+        --ink: #1d2226;
         --ink-soft: #5b6166;
         --cream: #eef3f4;
-        --gold: #0e5468;
-        --gold-bright: #e2f0f4;
-        --gold-soft: rgba(0, 61, 76, 0.10);
-        --gold-mid: rgba(0, 61, 76, 0.30);
-        --green: #003d4c;
+        --teal: #003d4c;
+        --teal-deep: #002b36;
+        --teal-soft: rgba(0, 61, 76, 0.09);
+        --teal-mid: rgba(0, 61, 76, 0.30);
+        --ice: #e2f0f4;
         --sage: #b2b794;
         --red: #b2292e;
         --card: #ffffff;
         --rule: #ddd9d0;
         --serif: "Source Serif 4", "Iowan Old Style", Palatino, Georgia, serif;
         --sans: "Mulish", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+        --shadow-1: 0 1px 2px rgba(29, 34, 38, 0.05), 0 4px 16px rgba(29, 34, 38, 0.06);
+        --shadow-2: 0 2px 6px rgba(29, 34, 38, 0.08), 0 16px 44px rgba(29, 34, 38, 0.12);
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -40,100 +42,134 @@
         font-family: var(--serif);
         line-height: 1.7;
         -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
     }
 
-    .frame { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+    .frame { max-width: 1200px; margin: 0 auto; padding: 0 28px; }
+
+    /* ---------- Reveal-on-scroll ---------- */
+    .reveal {
+        opacity: 0;
+        transform: translateY(26px);
+        transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .reveal.in { opacity: 1; transform: none; }
 
     /* ---------- Hero ---------- */
     .hero {
         position: relative;
-        min-height: 78vh;
+        min-height: 92vh;
         display: flex;
         align-items: flex-end;
-        background: var(--ink);
+        background: var(--teal-deep);
         overflow: hidden;
     }
     .hero-img {
         position: absolute;
-        inset: 0;
+        inset: -4% 0;
         background-image: url('img/hero.jpg');
         background-size: cover;
-        background-position: center 40%;
-        transform: scale(1.02);
+        background-position: center 42%;
+        transform: scale(1.14);
+        animation: kenburns 13s cubic-bezier(0.19, 0.6, 0.32, 1) forwards;
+        will-change: transform;
     }
+    @keyframes kenburns { to { transform: scale(1.02); } }
     .hero::after {
         content: "";
         position: absolute;
         inset: 0;
         background: linear-gradient(to top,
-            rgba(0, 30, 38, 0.88) 0%,
-            rgba(0, 30, 38, 0.45) 34%,
-            rgba(0, 30, 38, 0.10) 60%,
-            rgba(0, 30, 38, 0.25) 100%);
+            rgba(0, 30, 38, 0.9) 0%,
+            rgba(0, 30, 38, 0.44) 36%,
+            rgba(0, 30, 38, 0.08) 62%,
+            rgba(0, 30, 38, 0.28) 100%);
+    }
+    .grain {
+        position: absolute;
+        inset: 0;
+        z-index: 3;
+        pointer-events: none;
+        opacity: 0.055;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)'/%3E%3C/svg%3E");
     }
     .hero-inner {
         position: relative;
         z-index: 2;
         width: 100%;
-        max-width: 1180px;
+        max-width: 1200px;
         margin: 0 auto;
-        padding: 0 24px 64px;
+        padding: 0 28px 84px;
         color: var(--cream);
     }
     .hero .kicker {
         font-family: var(--sans);
         font-size: 12px;
-        letter-spacing: 0.26em;
+        font-weight: 700;
+        letter-spacing: 0.3em;
         text-transform: uppercase;
-        color: var(--gold-bright);
-        margin-bottom: 16px;
+        color: var(--ice);
+        margin-bottom: 20px;
+        opacity: 0;
+        animation: rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.25s forwards;
     }
     .hero h1 {
-        font-size: clamp(34px, 6vw, 64px);
-        font-weight: 500;
-        letter-spacing: -0.012em;
-        line-height: 1.08;
-        max-width: 800px;
+        font-size: clamp(40px, 7.2vw, 84px);
+        font-weight: 600;
+        letter-spacing: -0.015em;
+        line-height: 1.04;
+        max-width: 850px;
         text-wrap: balance;
+        opacity: 0;
+        animation: rise 1s cubic-bezier(0.22, 1, 0.36, 1) 0.45s forwards;
     }
     .hero .byline {
-        margin-top: 20px;
+        margin-top: 24px;
         font-family: var(--sans);
-        font-size: 14px;
-        color: rgba(245, 239, 226, 0.85);
+        font-size: 15px;
+        color: rgba(238, 243, 244, 0.85);
+        opacity: 0;
+        animation: rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.75s forwards;
     }
-    .hero .byline strong { color: #fff; font-weight: 600; }
+    .hero .byline strong { color: #fff; font-weight: 700; }
     .hero .scrollcue {
-        margin-top: 28px;
+        margin-top: 34px;
         font-family: var(--sans);
         font-size: 12px;
-        letter-spacing: 0.14em;
+        font-weight: 600;
+        letter-spacing: 0.18em;
         text-transform: uppercase;
-        color: rgba(245, 239, 226, 0.65);
+        color: rgba(238, 243, 244, 0.6);
+        opacity: 0;
+        animation: rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) 1.05s forwards;
     }
     .hero .scrollcue::after {
         content: "↓";
         display: inline-block;
-        margin-left: 8px;
-        animation: bob 2s ease-in-out infinite;
+        margin-left: 9px;
+        animation: bob 2.2s ease-in-out infinite;
     }
-    @keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(4px); } }
+    @keyframes rise { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: none; } }
+    @keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(5px); } }
 
     /* ---------- Meta bar ---------- */
     .metabar {
         position: sticky;
         top: 0;
         z-index: 40;
-        background: rgba(250, 247, 240, 0.94);
-        backdrop-filter: blur(8px);
+        background: rgba(247, 246, 242, 0.85);
+        backdrop-filter: blur(14px) saturate(1.4);
+        -webkit-backdrop-filter: blur(14px) saturate(1.4);
         border-bottom: 1px solid var(--rule);
         font-family: var(--sans);
         font-size: 12px;
+        transition: box-shadow 0.3s ease;
     }
+    .metabar.scrolled { box-shadow: var(--shadow-1); }
     .metabar-inner {
-        max-width: 1180px;
+        max-width: 1200px;
         margin: 0 auto;
-        padding: 10px 24px;
+        padding: 11px 28px;
         display: flex;
         align-items: center;
         gap: 14px;
@@ -142,343 +178,414 @@
     .chip {
         display: inline-flex;
         align-items: center;
-        gap: 6px;
-        padding: 4px 10px;
+        gap: 7px;
+        padding: 5px 12px;
         border: 1px solid var(--rule);
         border-radius: 999px;
         color: var(--ink-soft);
         background: var(--card);
         white-space: nowrap;
+        font-weight: 600;
     }
-    .chip b { color: var(--ink); font-weight: 600; }
-    .chip .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); }
+    .chip b { color: var(--ink); font-weight: 800; }
+    .chip .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--teal); }
     .spacer { flex: 1; }
     .btn {
         font-family: var(--sans);
         font-size: 12px;
-        padding: 6px 14px;
+        font-weight: 700;
+        padding: 7px 16px;
         border-radius: 999px;
-        border: 1px solid var(--ink);
+        border: 1.5px solid var(--ink);
         background: transparent;
         color: var(--ink);
         cursor: pointer;
-        transition: all 0.15s ease;
+        transition: all 0.18s ease;
         white-space: nowrap;
     }
-    .btn:hover { background: var(--ink); color: var(--paper); }
-    .btn.primary { background: var(--ink); color: var(--paper); }
-    .btn.primary:hover { background: var(--green); border-color: var(--green); }
+    .btn:hover { background: var(--ink); color: var(--paper); transform: translateY(-1px); }
+    .btn:active { transform: translateY(0); }
+    .btn.primary { background: var(--teal); border-color: var(--teal); color: #fff; }
+    .btn.primary:hover { background: var(--teal-deep); border-color: var(--teal-deep); }
+    .chip.live { display: none; }
+    .chip.live.show { display: inline-flex; }
+    .chip.live .pulse {
+        width: 6px; height: 6px; border-radius: 50%;
+        background: var(--teal);
+        animation: pulse-dot 2.4s ease-in-out infinite;
+    }
+    @keyframes pulse-dot { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.35; transform: scale(0.8); } }
 
     /* ---------- Layout ---------- */
     .stage {
         display: grid;
-        grid-template-columns: minmax(0, 660px) minmax(310px, 420px);
-        gap: 56px;
-        padding: 64px 0 48px;
+        grid-template-columns: minmax(0, 680px) minmax(320px, 430px);
+        gap: 64px;
+        padding: 76px 0 56px;
         align-items: start;
     }
 
-    /* ---------- The paragraph ---------- */
-    .para-wrap { max-width: 680px; }
-    .instruction {
+    /* ---------- Ask ---------- */
+    .askbox {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 18px;
+    }
+    .askbox .field {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: var(--card);
+        border: 1.5px solid var(--rule);
+        border-radius: 999px;
+        padding: 0 8px 0 18px;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .askbox .field:focus-within {
+        border-color: var(--teal);
+        box-shadow: 0 0 0 4px var(--teal-soft), var(--shadow-1);
+    }
+    .askbox .qmark {
+        font-family: var(--serif);
+        font-size: 17px;
+        color: var(--teal);
+        font-weight: 700;
+    }
+    .askbox input {
+        flex: 1;
+        font-family: var(--serif);
+        font-size: 15.5px;
+        padding: 13px 0;
+        border: none;
+        background: transparent;
+        color: var(--ink);
+        outline: none;
+    }
+    .askbox input::placeholder { color: var(--ink-soft); opacity: 0.7; font-style: italic; }
+    .askbox button {
         font-family: var(--sans);
-        font-size: 12.5px;
+        font-size: 13px;
+        font-weight: 700;
+        margin: 5px;
+        padding: 9px 20px;
+        border-radius: 999px;
+        border: none;
+        background: var(--teal);
+        color: #fff;
+        cursor: pointer;
+        transition: background 0.18s ease, transform 0.18s ease;
+    }
+    .askbox button:hover { background: var(--teal-deep); transform: translateY(-1px); }
+    .ask-answer {
+        display: none;
+        background: var(--card);
+        border: 1px solid var(--rule);
+        border-left: 3px solid var(--teal);
+        border-radius: 12px;
+        padding: 16px 20px 14px;
+        margin-bottom: 26px;
+        box-shadow: var(--shadow-1);
+    }
+    .ask-answer.show { display: block; animation: rise 0.4s cubic-bezier(0.22, 1, 0.36, 1); }
+    .ask-answer .aa-q {
+        font-family: var(--sans);
+        font-size: 11.5px;
+        font-weight: 700;
         color: var(--ink-soft);
-        margin-bottom: 30px;
-        padding-left: 14px;
-        border-left: 2px solid var(--gold);
+        margin-bottom: 8px;
+    }
+    .ask-answer .aa-text {
+        font-size: 15.5px;
         line-height: 1.7;
     }
+    .ask-answer .aa-text .caret {
+        display: inline-block;
+        width: 8px; height: 17px;
+        background: var(--teal);
+        vertical-align: text-bottom;
+        margin-left: 2px;
+        animation: blink 0.85s steps(1) infinite;
+    }
+    @keyframes blink { 50% { opacity: 0; } }
+    .ask-answer .aa-tag {
+        margin-top: 10px;
+        font-family: var(--sans);
+        font-size: 10.5px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--teal);
+        opacity: 0.75;
+    }
+    body.plain .askbox, body.plain .ask-answer { display: none; }
+
+    /* ---------- The paragraph ---------- */
+    .para-wrap { max-width: 700px; }
+    .instruction {
+        font-family: var(--sans);
+        font-size: 13px;
+        color: var(--ink-soft);
+        margin-bottom: 26px;
+        padding-left: 16px;
+        border-left: 2.5px solid var(--teal);
+        line-height: 1.75;
+    }
     .para {
-        font-size: clamp(18px, 2.1vw, 21.5px);
-        line-height: 1.88;
+        font-size: clamp(19px, 2.2vw, 22.5px);
+        line-height: 1.9;
         letter-spacing: 0.002em;
     }
     .para .hl {
         font: inherit;
         color: inherit;
-        background: linear-gradient(transparent 62%, var(--gold-soft) 62%);
         border: none;
-        border-bottom: 1px solid var(--gold-mid);
-        padding: 0 1px;
         cursor: pointer;
-        transition: background 0.15s ease, border-color 0.15s ease;
-        border-radius: 2px 2px 0 0;
+        padding: 0 1px 2px;
+        border-radius: 2px;
+        background-image: linear-gradient(var(--teal-soft), var(--teal-soft)), linear-gradient(var(--teal), var(--teal));
+        background-repeat: no-repeat;
+        background-size: 100% 42%, 0% 2px;
+        background-position: 0 68%, 0 100%;
+        transition: background-size 0.3s cubic-bezier(0.22, 1, 0.36, 1), color 0.2s ease;
     }
-    .para .hl:hover {
-        background: linear-gradient(transparent 30%, var(--gold-soft) 30%);
-        border-bottom-color: var(--gold);
-    }
+    .para .hl:hover { background-size: 100% 78%, 100% 2px; }
     .para .hl.active {
-        background: linear-gradient(transparent 15%, var(--gold-mid) 15%);
-        border-bottom-color: var(--gold);
+        background-size: 100% 88%, 100% 2.5px;
+        color: var(--teal-deep);
+        font-weight: 600;
+    }
+    .para .hl.wake { animation: wake 0.7s ease; }
+    @keyframes wake {
+        0% { background-size: 100% 42%, 0% 2px; }
+        45% { background-size: 100% 88%, 100% 2px; }
+        100% { background-size: 100% 42%, 0% 2px; }
     }
     .para .hl.visited:not(.active)::after {
         content: "";
         display: inline-block;
         width: 4px; height: 4px;
         border-radius: 50%;
-        background: var(--gold);
+        background: var(--sage);
         vertical-align: super;
         margin-left: 2px;
-        opacity: 0.7;
     }
 
-    body.plain .para .hl { background: none; border-bottom: none; cursor: text; pointer-events: none; }
+    body.plain .para .hl { background: none; cursor: text; pointer-events: none; font-weight: 400; color: inherit; }
     body.plain .para .hl.visited::after { display: none; }
     body.plain .dock, body.plain .instruction { display: none; }
-    body.plain .stage { grid-template-columns: minmax(0, 680px); justify-content: center; }
+    body.plain .stage { grid-template-columns: minmax(0, 700px); justify-content: center; }
 
     /* ---------- Dock ---------- */
     .dock {
         position: sticky;
-        top: 60px;
+        top: 66px;
         border: 1px solid var(--rule);
-        border-radius: 12px;
+        border-radius: 16px;
         background: var(--card);
         overflow: hidden;
-        box-shadow: 0 2px 14px rgba(30, 28, 23, 0.07);
+        box-shadow: var(--shadow-2);
     }
     .dock-head {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 12px 18px;
+        padding: 13px 20px;
         border-bottom: 1px solid var(--rule);
         font-family: var(--sans);
         font-size: 11px;
-        letter-spacing: 0.14em;
+        font-weight: 700;
+        letter-spacing: 0.16em;
         text-transform: uppercase;
         color: var(--ink-soft);
     }
-    .dock-head .count { color: var(--gold); font-weight: 600; letter-spacing: 0; text-transform: none; }
+    .dock-head .count { color: var(--teal); letter-spacing: 0; text-transform: none; font-size: 12px; }
+    .dots {
+        display: flex;
+        gap: 8px;
+        padding: 13px 20px;
+        border-bottom: 1px solid var(--rule);
+    }
+    .dots button {
+        width: 9px; height: 9px;
+        border-radius: 50%;
+        border: 1.5px solid var(--teal-mid);
+        background: transparent;
+        cursor: pointer;
+        padding: 0;
+        transition: all 0.18s ease;
+    }
+    .dots button:hover { transform: scale(1.45); border-color: var(--teal); }
+    .dots button.on { background: var(--teal); border-color: var(--teal); animation: pop 0.35s cubic-bezier(0.22, 1.4, 0.36, 1); }
+    .dots button.now { box-shadow: 0 0 0 3.5px var(--teal-soft); }
+    @keyframes pop { 0% { transform: scale(1.7); } 100% { transform: scale(1); } }
     .dock-img {
-        height: 180px;
+        height: 195px;
         background-size: cover;
         background-position: center;
         display: none;
         position: relative;
     }
     .dock-img.show { display: block; }
+    .dock-img.swap { animation: imgin 0.55s cubic-bezier(0.22, 1, 0.36, 1); }
+    @keyframes imgin { from { opacity: 0.3; transform: scale(1.05); } to { opacity: 1; transform: scale(1); } }
     .dock-img::after {
         content: "";
         position: absolute; inset: 0;
-        background: linear-gradient(to top, rgba(30,28,23,0.35), transparent 45%);
+        background: linear-gradient(to top, rgba(0, 30, 38, 0.38), transparent 48%);
     }
-    .dock-body { padding: 22px 24px 24px; min-height: 210px; }
+    .dock-body { padding: 24px 26px 26px; min-height: 200px; }
+    .dock-body.swap { animation: bodyin 0.4s cubic-bezier(0.22, 1, 0.36, 1); }
+    @keyframes bodyin { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
     .dock-strand {
         font-family: var(--sans);
         font-size: 10.5px;
-        font-weight: 700;
-        letter-spacing: 0.18em;
+        font-weight: 800;
+        letter-spacing: 0.2em;
         text-transform: uppercase;
-        color: var(--green);
-        margin-bottom: 8px;
+        color: var(--teal);
+        margin-bottom: 9px;
     }
-    .dock-title { font-size: 21px; font-weight: 600; line-height: 1.3; margin-bottom: 12px; }
-    .dock-text { font-size: 15px; line-height: 1.7; margin-bottom: 16px; }
+    .dock-title { font-size: 22px; font-weight: 700; line-height: 1.28; margin-bottom: 12px; }
+    .dock-text { font-size: 15px; line-height: 1.72; margin-bottom: 16px; }
     .dock-chip {
         display: inline-block;
         font-family: var(--sans);
         font-size: 11.5px;
+        font-weight: 600;
         color: var(--ink-soft);
         background: var(--paper);
         border: 1px solid var(--rule);
-        border-radius: 6px;
-        padding: 6px 10px;
-        line-height: 1.5;
+        border-radius: 8px;
+        padding: 7px 11px;
+        line-height: 1.55;
     }
-    .dock-chip b { color: var(--red); font-weight: 700; }
+    .dock-chip b { color: var(--red); font-weight: 800; }
     .dock-empty {
         color: var(--ink-soft);
         font-size: 14.5px;
         line-height: 1.7;
         font-style: italic;
-        padding-top: 34px;
+        padding-top: 32px;
         text-align: center;
     }
-    .dock-nav { display: flex; gap: 8px; padding: 0 24px 20px; align-items: center; }
+    .dock-nav { display: flex; gap: 8px; padding: 0 26px 22px; align-items: center; }
     .dock-nav button {
         font-family: var(--sans);
         font-size: 11.5px;
-        padding: 5px 12px;
-        border-radius: 6px;
+        font-weight: 700;
+        padding: 6px 13px;
+        border-radius: 8px;
         border: 1px solid var(--rule);
         background: var(--paper);
         color: var(--ink-soft);
         cursor: pointer;
+        transition: all 0.15s ease;
     }
-    .dock-nav button:hover { border-color: var(--gold); color: var(--ink); }
+    .dock-nav button:hover { border-color: var(--teal); color: var(--teal); transform: translateY(-1px); }
     .dock-nav .kbd-hint {
         margin-left: auto;
         font-family: var(--sans);
         font-size: 10.5px;
         color: var(--ink-soft);
-        opacity: 0.7;
+        opacity: 0.65;
     }
-
-    /* ---------- Strand dots ---------- */
-    .dots {
-        display: flex;
-        gap: 7px;
-        padding: 12px 24px;
-        border-bottom: 1px solid var(--rule);
-    }
-    .dots button {
-        width: 9px; height: 9px;
-        border-radius: 50%;
-        border: 1px solid var(--gold-mid);
-        background: transparent;
-        cursor: pointer;
-        padding: 0;
-        transition: all 0.15s ease;
-    }
-    .dots button:hover { transform: scale(1.35); border-color: var(--gold); }
-    .dots button.on { background: var(--gold); border-color: var(--gold); }
-    .dots button.now { box-shadow: 0 0 0 3px var(--gold-soft); }
-
-    /* ---------- Ask box ---------- */
-    .askbox {
-        display: flex;
-        gap: 8px;
-        margin-bottom: 30px;
-    }
-    .askbox input {
-        flex: 1;
-        font-family: var(--serif);
-        font-size: 15.5px;
-        padding: 11px 16px;
-        border: 1px solid var(--rule);
-        border-radius: 10px;
-        background: var(--card);
-        color: var(--ink);
-        outline: none;
-        transition: border-color 0.15s ease, box-shadow 0.15s ease;
-    }
-    .askbox input:focus { border-color: var(--gold); box-shadow: 0 0 0 3px var(--gold-soft); }
-    .askbox input::placeholder { color: var(--ink-soft); opacity: 0.75; font-style: italic; }
-    .askbox button {
-        font-family: var(--sans);
-        font-size: 13px;
-        padding: 0 20px;
-        border-radius: 10px;
-        border: none;
-        background: var(--green);
-        color: var(--cream);
-        cursor: pointer;
-        transition: background 0.15s ease;
-    }
-    .askbox button:hover { background: var(--ink); }
-    .ask-echo {
-        font-family: var(--sans);
-        font-size: 12px;
-        color: var(--green);
-        background: rgba(46, 70, 50, 0.07);
-        border-left: 2px solid var(--green);
-        padding: 8px 12px;
-        margin-bottom: 14px;
-        border-radius: 0 6px 6px 0;
-        display: none;
-    }
-    .ask-echo.show { display: block; }
-    body.plain .askbox, body.plain .ask-echo { display: none; }
-
-    /* ---------- Live weather chip ---------- */
-    .chip.live { display: none; }
-    .chip.live.show { display: inline-flex; }
-    .chip.live .pulse {
-        width: 6px; height: 6px; border-radius: 50%;
-        background: var(--green);
-        animation: pulse-dot 2.4s ease-in-out infinite;
-    }
-    @keyframes pulse-dot { 0%,100% { opacity: 1; } 50% { opacity: 0.35; } }
     .dock-close-x {
         display: none;
         background: none; border: none;
-        font-size: 20px; color: var(--ink-soft);
+        font-size: 22px; color: var(--ink-soft);
         cursor: pointer; line-height: 1;
     }
 
     /* ---------- Footer ---------- */
     .footband {
         position: relative;
-        margin-top: 56px;
-        background: var(--ink);
+        margin-top: 64px;
+        background: var(--teal-deep);
         color: var(--cream);
         overflow: hidden;
     }
     .footband-img {
-        position: absolute; inset: 0;
+        position: absolute; inset: -12% 0;
         background-image: url('img/trees.jpg');
         background-size: cover;
         background-position: center 60%;
         opacity: 0.5;
+        will-change: transform;
     }
     .footband::after {
         content: "";
         position: absolute; inset: 0;
-        background: linear-gradient(to bottom, rgba(0,30,38,0.6), rgba(0,30,38,0.92));
+        background: linear-gradient(to bottom, rgba(0, 30, 38, 0.62), rgba(0, 30, 38, 0.93));
     }
     .footband-inner {
         position: relative;
         z-index: 2;
-        max-width: 720px;
+        max-width: 740px;
         margin: 0 auto;
-        padding: 72px 24px 64px;
+        padding: 84px 28px 72px;
         text-align: center;
     }
     .footband .foot-note {
-        font-size: clamp(16px, 2vw, 19px);
+        font-size: clamp(17px, 2.1vw, 20px);
         font-style: italic;
-        line-height: 1.75;
-        margin-bottom: 34px;
-        color: rgba(245, 239, 226, 0.94);
+        line-height: 1.78;
+        margin-bottom: 38px;
+        color: rgba(238, 243, 244, 0.95);
     }
     .footband .foot-id {
         font-family: var(--sans);
-        font-size: 13px;
-        line-height: 2.1;
-        color: rgba(245, 239, 226, 0.8);
+        font-size: 13.5px;
+        line-height: 2.15;
+        color: rgba(238, 243, 244, 0.82);
     }
-    .footband .foot-id strong { color: #fff; }
-    .footband a { color: var(--gold-bright); text-decoration: none; }
-    .footband a:hover { text-decoration: underline; }
+    .footband .foot-id strong { color: #fff; font-weight: 700; }
+    .footband a { color: var(--ice); text-decoration: none; border-bottom: 1px solid rgba(226, 240, 244, 0.3); transition: border-color 0.15s ease; }
+    .footband a:hover { border-bottom-color: var(--ice); }
     .foot-credit {
-        margin-top: 26px;
+        margin-top: 30px;
         font-family: var(--sans);
         font-size: 11px;
         letter-spacing: 0.05em;
-        color: rgba(245, 239, 226, 0.55);
+        color: rgba(238, 243, 244, 0.5);
     }
 
     /* ---------- Mobile ---------- */
     @media (max-width: 900px) {
-        .hero { min-height: 64vh; }
-        .stage { grid-template-columns: 1fr; gap: 0; padding-top: 40px; }
+        .hero { min-height: 72vh; }
+        .stage { grid-template-columns: 1fr; gap: 0; padding-top: 44px; }
         .dock {
             position: fixed;
             left: 0; right: 0; bottom: 0;
             top: auto;
-            border-radius: 16px 16px 0 0;
+            border-radius: 18px 18px 0 0;
             border-bottom: none;
-            box-shadow: 0 -8px 30px rgba(30, 28, 23, 0.2);
+            box-shadow: 0 -10px 40px rgba(0, 30, 38, 0.28);
             transform: translateY(110%);
-            transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+            transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
             z-index: 60;
-            max-height: 72vh;
+            max-height: 74vh;
             overflow-y: auto;
         }
         .dock.open { transform: translateY(0); }
         .dock-body { min-height: 0; }
         .dock-close-x { display: block; }
-        .dock-img { height: 130px; }
+        .dock-img { height: 135px; }
+    }
+
+    /* ---------- Reduced motion ---------- */
+    @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after { animation: none !important; transition: none !important; }
+        .reveal { opacity: 1; transform: none; }
+        .hero .kicker, .hero h1, .hero .byline, .hero .scrollcue { opacity: 1; }
     }
 </style>
 </head>
 <body>
 
 <section class="hero">
-    <div class="hero-img"></div>
+    <div class="hero-img" id="heroImg"></div>
+    <div class="grain"></div>
     <div class="hero-inner">
         <div class="kicker">An application in one paragraph</div>
         <h1>An estate that knows itself.</h1>
@@ -487,11 +594,11 @@
     </div>
 </section>
 
-<div class="metabar">
+<div class="metabar" id="metabar">
     <div class="metabar-inner">
-        <span class="chip"><span class="dot"></span><b id="wordCount">–</b>&nbsp;words · one paragraph</span>
+        <span class="chip"><span class="dot"></span><b id="wordCount">0</b>&nbsp;words · one paragraph</span>
         <span class="chip">Brief: 250–350 · <b>within limit</b></span>
-        <span class="chip live" id="liveChip" title="Live conditions over Woodstock — the estate already talks, if you listen."><span class="pulse"></span><span id="liveText"></span></span>
+        <span class="chip live" id="liveChip" title="Live conditions over Woodstock. The estate already talks, if you listen."><span class="pulse"></span><span id="liveText"></span></span>
         <span class="spacer"></span>
         <button class="btn" id="plainToggle">Read as submitted</button>
         <button class="btn primary" id="copyBtn">Copy plain text</button>
@@ -501,18 +608,25 @@
 <div class="frame">
     <div class="stage">
         <div class="para-wrap">
-            <p class="instruction">The brief asks for one innovation goal in 250–350 words. This is that paragraph. The underlined phrases open out — each one lands the goal in a different strand of Blenheim. Ask the page a question, take the tour, or press "Read as submitted" for the plain text.</p>
+            <p class="instruction reveal">The brief asks for one innovation goal in 250 to 350 words, and this is that paragraph. The underlined phrases open out, each landing the goal in a different strand of Blenheim. Ask the page a question, take the tour, or press Read as submitted for the plain text.</p>
 
-            <div class="askbox">
-                <input type="text" id="askInput" placeholder="Ask this page — try &ldquo;how would this help the gardens?&rdquo;" autocomplete="off">
+            <div class="askbox reveal">
+                <div class="field">
+                    <span class="qmark">?</span>
+                    <input type="text" id="askInput" placeholder="Ask this page anything about the goal, or about James" autocomplete="off">
+                </div>
                 <button id="askBtn">Ask</button>
             </div>
-            <div class="ask-echo" id="askEcho"></div>
+            <div class="ask-answer" id="askAnswer">
+                <div class="aa-q" id="aaQ"></div>
+                <div class="aa-text" id="aaText"></div>
+                <div class="aa-tag" id="aaTag"></div>
+            </div>
 
-            <p class="para" id="para">Blenheim has already built the hard parts, a <button class="hl" data-k="twin">digital twin of the Palace</button>, <button class="hl" data-k="vms">visitor forecasting</button> that improved accuracy by around 80%, open-source sensors that <button class="hl" data-k="base">listen to birds, bats and even the soil</button>, a guide that <button class="hl" data-k="culturati">adapts its storytelling to each visitor</button>, and a workforce where <button class="hl" data-k="adoption">42% of staff</button> use AI in their daily work. My goal for the next phase is to connect them. <button class="hl" data-k="goal">One conversational layer</button> over the whole estate, so anyone who works here can ask a question in plain English and get an answer drawn from Blenheim's own data. A <button class="hl" data-k="ops">duty manager</button> asks what Saturday looks like and gets a forecast with staffing suggestions. A <button class="hl" data-k="land">forester</button> asks which compartments need thinning and the answer draws on the twin, the sensor network and thirty years of records. A <button class="hl" data-k="archive">curator</button> asks what the archive holds on the fourth Duke's planting schemes and surfaces material that would have taken a week to find. An <button class="hl" data-k="pye">apprentice at Pye Homes</button> asks how a detail was solved on the last development and learns from the company's own memory instead of starting again. This matters because the value of what the Innovation team has built multiplies when it stops living in separate systems and starts answering questions together, and because it turns AI adoption from a training programme into the way the estate simply works. It serves the goals Blenheim has set itself, the <button class="hl" data-k="goals">endowment</button> through efficiency, the visitors through better operations, the land through continuous monitoring, and the mission through access, because <button class="hl" data-k="mission">an estate you can ask is an estate you can share</button>. Three hundred years ago Blenheim was built as a statement of what a nation could do. The next statement is quieter, an estate that knows itself, and I would like to help build it.</p>
+            <p class="para reveal" id="para">Blenheim has already built the hard parts, a <button class="hl" data-k="twin">digital twin of the Palace</button>, <button class="hl" data-k="vms">visitor forecasting</button> that improved accuracy by around 80%, open-source sensors that <button class="hl" data-k="base">listen to birds, bats and even the soil</button>, a guide that <button class="hl" data-k="culturati">adapts its storytelling to each visitor</button>, and a workforce where <button class="hl" data-k="adoption">42% of staff</button> use AI in their daily work. My goal for the next phase is to connect them. <button class="hl" data-k="goal">One conversational layer</button> over the whole estate, so anyone who works here can ask a question in plain English and get an answer drawn from Blenheim's own data. A <button class="hl" data-k="ops">duty manager</button> asks what Saturday looks like and gets a forecast with staffing suggestions. A <button class="hl" data-k="land">forester</button> asks which compartments need thinning and the answer draws on the twin, the sensor network and thirty years of records. A <button class="hl" data-k="archive">curator</button> asks what the archive holds on the fourth Duke's planting schemes and surfaces material that would have taken a week to find. An <button class="hl" data-k="pye">apprentice at Pye Homes</button> asks how a detail was solved on the last development and learns from the company's own memory instead of starting again. This matters because the value of what the Innovation team has built multiplies when it stops living in separate systems and starts answering questions together, and because it turns AI adoption from a training programme into the way the estate simply works. It serves the goals Blenheim has set itself, the <button class="hl" data-k="goals">endowment</button> through efficiency, the visitors through better operations, the land through continuous monitoring, and the mission through access, because <button class="hl" data-k="mission">an estate you can ask is an estate you can share</button>. Three hundred years ago Blenheim was built as a statement of what a nation could do. The next statement is quieter, an estate that knows itself, and I would like to help build it.</p>
         </div>
 
-        <aside class="dock" id="dock">
+        <aside class="dock reveal" id="dock">
             <div class="dock-head">
                 <span>Strand notes</span>
                 <span class="count" id="explored">0 / 12 explored</span>
@@ -534,102 +648,104 @@
 </div>
 
 <footer class="footband">
-    <div class="footband-img"></div>
-    <div class="footband-inner">
-        <p class="foot-note">This page is the alternative format the brief invites. The paragraph above, read plainly, is the application — the page around it is a small working demonstration of the goal it proposes: one surface that opens into every strand of the estate.</p>
+    <div class="footband-img" id="footImg"></div>
+    <div class="footband-inner reveal">
+        <p class="foot-note">This page is the alternative format the brief invites. Read plainly, the paragraph is the application, and the page around it is a working demonstration of the goal it proposes, one surface that opens into every strand of the estate.</p>
         <p class="foot-id">
             <strong>James Vickers</strong> MCIM MCPR<br>
             <a href="mailto:james@manual-focus.co.uk">james@manual-focus.co.uk</a> · 07897 714630<br>
             <a href="https://scylark.github.io/interactive-resume/" target="_blank" rel="noopener">Interactive portfolio: scylark.github.io/interactive-resume</a>
         </p>
-        <p class="foot-credit">Photography and digital twin imagery courtesy of Blenheim Palace, used with permission.</p>
+        <p class="foot-credit">Photography and digital twin imagery courtesy of Blenheim Palace, used with permission. Built by James with AI in the loop, which is rather the point.</p>
     </div>
 </footer>
 
 <script>
+const AGENT_URL = '__AGENT_URL__';
+
 const CARDS = {
     twin: {
         strand: "Digital Twin",
         title: "The estate's memory of itself",
         img: "img/twin.jpg",
-        text: "The twin your team built with Oxford — the Palace catalogued into 14,000 metadata-tagged elements — becomes the backbone the conversational layer answers from. Every asset record, condition survey and maintenance history stops being a database someone has to know exists and becomes an answer anyone can ask for.",
+        text: "The twin your team built with Oxford catalogued the Palace into 14,000 tagged elements, and that catalogue becomes the backbone the conversational layer answers from, so every asset record, condition survey and maintenance history stops being a database someone has to know exists and becomes an answer anyone can ask for.",
         chip: "<b>14,000</b> catalogued elements · Digital Twin programme, moving from concept to archetype"
     },
     vms: {
         strand: "SmartVMS · Operations",
-        title: "Forecasts become answers, not dashboards",
+        title: "Forecasts that reach everyone",
         img: "img/lawnaerial.jpg",
-        text: "SmartVMS improved forecast accuracy by around 80% — but a dashboard still needs someone to open it. Folded into one conversational layer, the same intelligence reaches every duty manager, caterer and events lead as a plain-English answer at the moment they need it.",
+        text: "SmartVMS improved forecast accuracy by around 80%, but a dashboard still needs someone to open it. Folded into one conversational layer, the same intelligence reaches every duty manager, caterer and events lead as a plain answer at the moment they need it.",
         chip: "<b>~80%</b> forecast accuracy improvement · Innovate UK / Oxford Brookes KTP"
     },
     base: {
         strand: "BASE · Weaveley",
         title: "Land health you can ask about",
         img: "img/soil.jpg",
-        text: "Your bioacoustics work at Weaveley — birds, bats, and the pioneering soil ecoacoustics — produces longitudinal data most estates could only dream of. Connected, it makes the land itself queryable: how is the soil this spring, which margins are recovering, what changed since the baseline year.",
+        text: "Your bioacoustics work at Weaveley listens to birds, bats and the soil itself, and the longitudinal record it produces makes the land queryable, so a gardener can ask how the soil is doing this spring, which margins are recovering, and what changed since the baseline year.",
         chip: "Open-source sensors · <b>soil ecoacoustics</b> · Year 2 longitudinal study"
     },
     culturati: {
         strand: "CULTURATI",
-        title: "Your own adaptive-storytelling principle, turned inward",
+        title: "Adaptive storytelling, turned inward",
         img: "img/tours.jpg",
-        text: "CULTURATI proved Blenheim can build storytelling that adapts to each listener — including Archie Illingworth's voice guiding visitors again. The conversational layer is the same principle pointed at the people who run the estate. This page works the same way, which is rather the point.",
+        text: "CULTURATI proved Blenheim can build storytelling that adapts to each listener, with Archie Illingworth's voice guiding visitors again. The conversational layer points the same principle at the people who run the estate, and this page works the same way, which is rather the point.",
         chip: "Horizon Europe · completed Jan 2026 · <b>2</b> prototype applications"
     },
     adoption: {
         strand: "People & Adoption",
-        title: "From training programme to ambient tool",
+        title: "Adoption without friction",
         img: "img/team.jpg",
-        text: "You've trained ~100 staff and reached 42% daily use — an adoption rate most corporations would envy. The ceiling on adoption isn't willingness, it's friction: twenty tools, twenty logins. One interface grounded in Blenheim's own data collapses that friction and makes the next 58% a matter of habit, not persuasion.",
+        text: "You've trained around 100 staff and reached 42% daily use, an adoption rate most corporations would envy. The ceiling now is friction rather than willingness, twenty tools and twenty logins, and one interface grounded in Blenheim's own data collapses that friction so the next 58% becomes habit rather than persuasion.",
         chip: "<b>~100</b> staff trained · <b>42%</b> daily AI use · 30-day reinforcement programme"
     },
     goal: {
         strand: "The Goal",
         title: "One conversational layer over the whole estate",
         img: "img/spot.jpg",
-        text: "A single ask-anything interface, grounded in the estate's own systems with permissions and provenance built in — answers cite their source. Start deliberately small: three data sources, one team, one quarter, measured in hours saved the way your finance app already is. Then widen, strand by strand. Capability-building becomes targeted implementation — your own stated next phase.",
+        text: "A single ask-anything interface grounded in the estate's own systems, with permissions and provenance built in so answers cite their source. Start small with three data sources, one team and one quarter, measured in hours saved the way your finance app already is, then widen strand by strand until capability-building becomes the targeted implementation your team has already called for.",
         chip: "Builds on internal AI apps already saving <b>~5 hrs</b> (finance), <b>~6 hrs</b> (HR), <b>up to 6 days</b> (Pye)"
     },
     ops: {
         strand: "Visitor Business",
         title: "Busy Saturdays, calmly run",
         img: "img/dronepark.jpg",
-        text: "The 750,000 paying-visitor ambition is won and lost on peak days. When any duty manager can ask what Saturday looks like — footfall, weather off the anemometric network, staffing gaps — and get an answer with suggestions, operational resilience stops depending on who happens to be on shift.",
+        text: "The 750,000 paying-visitor ambition is won and lost on peak days. When any duty manager can ask what Saturday looks like, footfall, weather off the anemometric network, staffing gaps, and get an answer with suggestions, operational resilience stops depending on who happens to be on shift.",
         chip: "Ten-year goal: <b>750,000</b> paying visitors · SmartVMS + anemometric sensor network"
     },
     land: {
         strand: "Estate & Land",
         title: "Thirty years of context in thirty seconds",
         img: "img/forestry.jpg",
-        text: "Six hundred thousand trees, regenerative agriculture, carbon-neutral by 2027 and 230,000 tonnes of CO2e to remove by 2050 — stewardship at this scale runs on decisions made with context. A forester who can ask the twin, the sensors and three decades of records in one question makes better calls, faster, and leaves a record of why.",
+        text: "Six hundred thousand trees, regenerative agriculture, carbon neutral by 2027 and 230,000 tonnes of CO2e to remove by 2050. Stewardship at this scale runs on context, and a forester who can put one question to the twin, the sensors and three decades of records makes better calls faster and leaves a record of why.",
         chip: "<b>600,000</b> trees · carbon neutral <b>2027</b> · <b>230,000</b> tonnes CO2e removal by 2050"
     },
     archive: {
         strand: "Collections & Archive",
         title: "Three centuries, retrievable",
         img: "img/roof.jpg",
-        text: "Blenheim's goal of reacquiring lost collection works starts with knowing — deeply, searchably — what the archive already holds. Retrieval-grounded AI over the estate's own records turns three hundred years of correspondence, planting schemes and inventories into a resource for curators, scholars and the storytelling the Palace sells tickets on.",
+        text: "Knowing what the archive already holds is where the goal of reacquiring lost works begins. Retrieval-grounded AI over the estate's own records turns three centuries of correspondence, planting schemes and inventories into a working resource for curators, scholars and the storytelling the Palace sells tickets on.",
         chip: "Ten-year goal: <b>reacquire lost works</b> · 300 years of estate records"
     },
     pye: {
         strand: "Pye Homes",
         title: "Institutional memory as a teaching tool",
         img: "img/pye.jpg",
-        text: "Pye has been building in Oxfordshire since 1927, and your internal AI work there already saves up to six days of workload. For the 100-apprentice ambition, the same layer becomes a teacher: how did we solve this detail last time, what did the site team learn, who signed it off. New people inherit the company's memory instead of rediscovering it.",
+        text: "Pye has built in Oxfordshire since 1927, and your internal AI work there already saves up to six days of workload. For the 100-apprentice ambition the same layer becomes a teacher, because a new joiner who can ask how the last site solved a detail inherits the company's memory instead of rediscovering it.",
         chip: "Pye Homes since <b>1927</b> · internal app saves <b>up to 6 days</b> · goal: <b>100+</b> apprentices"
     },
     goals: {
         strand: "The Ten-Year Goals",
         title: "Efficiency that compounds into endowment",
         img: "img/southlawn.jpg",
-        text: "The £45M endowment and tripled local economic contribution are funded, ultimately, by margin — and the hours this layer saves are margin. Your own numbers already prove the mechanism at small scale. Multiply it across every strand and efficiency stops being an IT line item and starts being an endowment strategy.",
+        text: "The £45M endowment and the tripled local economic contribution are funded by margin, and the hours this layer saves are margin. Your own numbers already prove the mechanism at small scale, so multiplied across every strand, efficiency stops being an IT line and starts being an endowment strategy.",
         chip: "Ten-year goals: <b>£45M</b> endowment · <b>3×</b> local economic contribution · Top 100 employer"
     },
     mission: {
         strand: "The Mission",
         title: "An estate you can ask is an estate you can share",
         img: "img/walk.jpg",
-        text: "The mission is to share and protect this place, enhance local lives and be the lifeblood of the local economy. Access is the thread through all three — and a conversational layer is, in the end, an instrument of access: for staff first, then researchers, schools, and the community the estate exists to serve.",
+        text: "The mission is to share and protect this place, enhance local lives and be the lifeblood of the local economy, and access is the thread through all three. A conversational layer is an instrument of access, for staff first, then researchers, schools and the community the estate exists to serve.",
         chip: "“To share and protect this place for future generations” · Heritage Foundation, charity no. 1166164"
     }
 };
@@ -654,6 +770,7 @@ const KEYWORDS = {
 const visited = new Set();
 let current = null;
 let tourTimer = null;
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 const dock = document.getElementById('dock');
 const dockBody = document.getElementById('dockBody');
@@ -661,7 +778,6 @@ const dockImg = document.getElementById('dockImg');
 const dockNav = document.getElementById('dockNav');
 const explored = document.getElementById('explored');
 const dotsWrap = document.getElementById('dots');
-const askEcho = document.getElementById('askEcho');
 const hls = document.querySelectorAll('.hl');
 
 /* Strand dots */
@@ -680,7 +796,13 @@ function refreshDots() {
     });
 }
 
-function show(key, echoText) {
+function retrigger(el, cls) {
+    el.classList.remove(cls);
+    void el.offsetWidth;
+    el.classList.add(cls);
+}
+
+function show(key) {
     const c = CARDS[key];
     if (!c) return;
     current = key;
@@ -696,14 +818,11 @@ function show(key, echoText) {
         '<div class="dock-title">' + c.title + '</div>' +
         '<div class="dock-text">' + c.text + '</div>' +
         '<div class="dock-chip">' + c.chip + '</div>';
+    if (!reduceMotion) { retrigger(dockImg, 'swap'); retrigger(dockBody, 'swap'); }
     dockNav.style.display = 'flex';
     explored.textContent = visited.size + ' / ' + ORDER.length + ' explored';
     dock.classList.add('open');
     refreshDots();
-    if (echoText) {
-        askEcho.textContent = echoText;
-        askEcho.classList.add('show');
-    }
 }
 
 hls.forEach(h => h.addEventListener('click', () => { stopTour(); show(h.dataset.k); }));
@@ -716,7 +835,6 @@ document.getElementById('prevBtn').addEventListener('click', () => { stopTour();
 document.getElementById('nextBtn').addEventListener('click', () => { stopTour(); step(1); });
 document.getElementById('dockClose').addEventListener('click', () => { stopTour(); dock.classList.remove('open'); });
 
-/* Keyboard navigation */
 document.addEventListener('keydown', (e) => {
     if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
     if (e.key === 'ArrowRight') { stopTour(); step(1); }
@@ -724,7 +842,7 @@ document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') { stopTour(); dock.classList.remove('open'); }
 });
 
-/* Tour mode */
+/* Tour */
 const tourBtn = document.getElementById('tourBtn');
 function stopTour() {
     if (tourTimer) { clearInterval(tourTimer); tourTimer = null; tourBtn.textContent = '▸ Tour all 12'; }
@@ -739,49 +857,92 @@ tourBtn.addEventListener('click', () => {
     }, 6500);
 });
 
-/* Ask the page */
-function ask(q) {
+/* ---------- Ask: agent first, keyword fallback ---------- */
+const askInput = document.getElementById('askInput');
+const askAnswer = document.getElementById('askAnswer');
+const aaQ = document.getElementById('aaQ');
+const aaText = document.getElementById('aaText');
+const aaTag = document.getElementById('aaTag');
+let typeTimer = null;
+
+function typewrite(text, tag) {
+    clearInterval(typeTimer);
+    if (reduceMotion) { aaText.textContent = text; aaTag.textContent = tag; return; }
+    aaText.innerHTML = '<span class="caret"></span>';
+    aaTag.textContent = '';
+    let i = 0;
+    typeTimer = setInterval(() => {
+        i += 2;
+        aaText.innerHTML = text.slice(0, i).replace(/&/g,'&amp;').replace(/</g,'&lt;') + (i < text.length ? '<span class="caret"></span>' : '');
+        if (i >= text.length) { clearInterval(typeTimer); aaTag.textContent = tag; }
+    }, 16);
+}
+
+function keywordRoute(q) {
     const tokens = q.toLowerCase().replace(/[^a-z0-9\s]/g, ' ').split(/\s+/).filter(t => t.length > 2);
-    if (!tokens.length) return;
     let best = null, bestScore = 0;
     ORDER.forEach(k => {
         let s = 0;
-        const kws = KEYWORDS[k];
         const body = (CARDS[k].title + ' ' + CARDS[k].text + ' ' + CARDS[k].strand).toLowerCase();
         tokens.forEach(t => {
-            if (kws.some(kw => kw === t)) s += 3;
-            else if (kws.some(kw => kw.startsWith(t) || t.startsWith(kw))) s += 2;
+            if (KEYWORDS[k].some(kw => kw === t)) s += 3;
+            else if (KEYWORDS[k].some(kw => kw.startsWith(t) || t.startsWith(kw))) s += 2;
             else if (body.includes(t)) s += 1;
         });
         if (s > bestScore) { bestScore = s; best = k; }
     });
-    stopTour();
     if (best && bestScore >= 2) {
-        show(best, '“' + q.trim() + '” — that lands in ' + CARDS[best].strand + '.');
+        show(best);
+        typewrite('That lands in ' + CARDS[best].strand + '. The strand note alongside has the detail.', 'Routed by the page');
     } else {
-        askEcho.textContent = '“' + q.trim() + '” — beyond this page, but exactly the kind of question the conversational layer is for. Ask me at interview.';
-        askEcho.classList.add('show');
+        typewrite('Beyond this page, but exactly the kind of question the conversational layer is for. One for the interview.', 'Routed by the page');
     }
 }
-const askInput = document.getElementById('askInput');
+
+async function ask(qRaw) {
+    const q = qRaw.trim();
+    if (!q) return;
+    stopTour();
+    askAnswer.classList.add('show');
+    aaQ.textContent = 'You asked: ' + q;
+    aaText.innerHTML = 'Thinking<span class="caret"></span>';
+    aaTag.textContent = '';
+    try {
+        if (AGENT_URL.indexOf('http') !== 0) throw new Error('no agent');
+        const r = await fetch(AGENT_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ question: q })
+        });
+        if (!r.ok) throw new Error('agent ' + r.status);
+        const d = await r.json();
+        if (!d.answer) throw new Error('empty');
+        if (d.strand && d.strand !== 'none' && CARDS[d.strand]) show(d.strand);
+        typewrite(d.answer, 'Answered by this page · Claude, with guardrails');
+    } catch (err) {
+        keywordRoute(q);
+    }
+    askInput.value = '';
+}
 document.getElementById('askBtn').addEventListener('click', () => ask(askInput.value));
 askInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') ask(askInput.value); });
 
-/* Live conditions over the estate (Woodstock) — silent on failure */
-fetch('https://api.open-meteo.com/v1/forecast?latitude=51.848&longitude=-1.354&current=temperature_2m,wind_speed_10m&wind_speed_unit=mph')
-    .then(r => r.json())
-    .then(d => {
-        const t = Math.round(d.current.temperature_2m);
-        const w = Math.round(d.current.wind_speed_10m);
-        document.getElementById('liveText').innerHTML = 'Over the estate now: <b>' + t + '°C · ' + w + ' mph wind</b>';
-        document.getElementById('liveChip').classList.add('show');
-        if (CARDS.ops) CARDS.ops.text += ' Right now it is ' + t + '°C with a ' + w + ' mph wind over Woodstock — this page checked, which is rather the idea.';
-    })
-    .catch(() => {});
-
+/* ---------- Word count (count-up) ---------- */
 const plainText = document.getElementById('para').innerText.replace(/\s+/g, ' ').trim();
-document.getElementById('wordCount').textContent = plainText.split(' ').length;
+const totalWords = plainText.split(' ').length;
+const wcEl = document.getElementById('wordCount');
+if (reduceMotion) { wcEl.textContent = totalWords; }
+else {
+    let n = 0;
+    const inc = Math.max(1, Math.round(totalWords / 45));
+    const cnt = setInterval(() => {
+        n = Math.min(totalWords, n + inc);
+        wcEl.textContent = n;
+        if (n >= totalWords) clearInterval(cnt);
+    }, 24);
+}
 
+/* ---------- Plain mode + copy ---------- */
 const plainToggle = document.getElementById('plainToggle');
 plainToggle.addEventListener('click', () => {
     document.body.classList.toggle('plain');
@@ -800,6 +961,57 @@ document.getElementById('copyBtn').addEventListener('click', async (e) => {
         setTimeout(() => e.target.textContent = 'Copy plain text', 1600);
     }
 });
+
+/* ---------- Live conditions (silent on failure) ---------- */
+fetch('https://api.open-meteo.com/v1/forecast?latitude=51.848&longitude=-1.354&current=temperature_2m,wind_speed_10m&wind_speed_unit=mph')
+    .then(r => r.json())
+    .then(d => {
+        const t = Math.round(d.current.temperature_2m);
+        const w = Math.round(d.current.wind_speed_10m);
+        document.getElementById('liveText').innerHTML = 'Over the estate now: <b>' + t + '°C · ' + w + ' mph</b>';
+        document.getElementById('liveChip').classList.add('show');
+        CARDS.ops.text += ' Right now it is ' + t + '°C with a ' + w + ' mph wind over Woodstock, and this page checked, which is rather the idea.';
+    })
+    .catch(() => {});
+
+/* ---------- Scroll effects ---------- */
+const metabar = document.getElementById('metabar');
+const heroImg = document.getElementById('heroImg');
+const footImg = document.getElementById('footImg');
+let ticking = false;
+window.addEventListener('scroll', () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => {
+        const y = window.scrollY;
+        metabar.classList.toggle('scrolled', y > 60);
+        if (!reduceMotion && window.innerWidth > 900) {
+            heroImg.style.translate = '0 ' + (y * 0.22) + 'px';
+            const fb = footImg.getBoundingClientRect();
+            if (fb.top < window.innerHeight && fb.bottom > 0) {
+                footImg.style.translate = '0 ' + ((fb.top - window.innerHeight) * 0.12) + 'px';
+            }
+        }
+        ticking = false;
+    });
+}, { passive: true });
+
+/* ---------- Reveals + highlight wake ---------- */
+const io = new IntersectionObserver((entries) => {
+    entries.forEach(en => {
+        if (!en.isIntersecting) return;
+        en.target.classList.add('in');
+        io.unobserve(en.target);
+        if (en.target.id === 'para' && !reduceMotion) {
+            let d = 400;
+            hls.forEach(h => {
+                setTimeout(() => retrigger(h, 'wake'), d);
+                d += 110;
+            });
+        }
+    });
+}, { threshold: 0.12 });
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 </script>
 </body>
 </html>
