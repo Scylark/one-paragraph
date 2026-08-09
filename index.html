@@ -758,7 +758,7 @@ const KEYWORDS = {
     base:      ["soil","birds","bats","wildlife","biodiversity","sensors","solar","weaveley","nature","ecology","acoustic","bioacoustics","species","garden","gardens","planting"],
     culturati: ["story","storytelling","tour","tours","guide","voice","experience","app","audio","interpretation","archie","adaptive"],
     adoption:  ["staff","training","people","adoption","skills","workshops","team","culture","change","learning","confidence","managers"],
-    goal:      ["layer","interface","chat","chatbot","ask","questions","connect","ai","data","systems","provenance","permissions","assistant","start","first","how","begin"],
+    goal:      ["layer","interface","chat","chatbot","connect","ai","data","systems","provenance","permissions","assistant"],
     ops:       ["duty","operations","events","weather","wind","opening","queues","cafe","café","retail","weekend","saturday","safety","manager"],
     land:      ["forest","forestry","tree","trees","farming","carbon","thinning","woodland","park","land","zero","regenerative","estate","hectares","wetland"],
     archive:   ["archive","archives","curator","collection","collections","history","records","duke","brown","capability","letters","paintings","art","scholars","research"],
@@ -878,24 +878,27 @@ function typewrite(text, tag) {
     }, 16);
 }
 
+const STOPWORDS = new Set(['how','what','why','when','where','who','which','does','did','will','would','could','can','should','the','and','for','with','about','this','that','tell','much','many','old','are','was','has','have','had','his','her','they','them','you','your','yours','james','vickers','blenheim','palace','please','role','job','than','then','there','here','one','two','into','from','been','being','get','got','make','made']);
+
 function keywordRoute(q) {
-    const tokens = q.toLowerCase().replace(/[^a-z0-9\s]/g, ' ').split(/\s+/).filter(t => t.length > 2);
-    let best = null, bestScore = 0;
+    const tokens = q.toLowerCase().replace(/[^a-z0-9\s]/g, ' ').split(/\s+/)
+        .filter(t => t.length > 2 && !STOPWORDS.has(t));
+    let best = null, bestScore = 0, bestKw = false;
     ORDER.forEach(k => {
-        let s = 0;
+        let s = 0, kwHit = false;
         const body = (CARDS[k].title + ' ' + CARDS[k].text + ' ' + CARDS[k].strand).toLowerCase();
         tokens.forEach(t => {
-            if (KEYWORDS[k].some(kw => kw === t)) s += 3;
-            else if (KEYWORDS[k].some(kw => kw.startsWith(t) || t.startsWith(kw))) s += 2;
+            if (KEYWORDS[k].some(kw => kw === t)) { s += 3; kwHit = true; }
+            else if (KEYWORDS[k].some(kw => kw.startsWith(t) || t.startsWith(kw))) { s += 2; kwHit = true; }
             else if (body.includes(t)) s += 1;
         });
-        if (s > bestScore) { bestScore = s; best = k; }
+        if (s > bestScore) { bestScore = s; best = k; bestKw = kwHit; }
     });
-    if (best && bestScore >= 2) {
+    if (best && bestKw && bestScore >= 3) {
         show(best);
-        typewrite('That lands in ' + CARDS[best].strand + '. The strand note alongside has the detail.', 'Routed by the page');
+        typewrite('The nearest strand to that is ' + CARDS[best].strand + ', opened alongside. For a fuller answer, this is exactly what the conversational layer is for.', 'Routed offline by the page');
     } else {
-        typewrite('Beyond this page, but exactly the kind of question the conversational layer is for. One for the interview.', 'Routed by the page');
+        typewrite('This page cannot answer that one offline, and it is exactly the kind of question the goal proposes an answer to. One for the interview, or the full record is at scylark.github.io/interactive-resume.', 'Routed offline by the page');
     }
 }
 
